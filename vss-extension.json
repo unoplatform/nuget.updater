@@ -1,0 +1,77 @@
+{
+	"manifestVersion": 1,
+	"id": "nventive",
+	"version": "0.0.0",
+	"name": "nventive Build Tools",
+	"description": "A set of build tools developed by nventive",
+	"publisher": "nventivecorp",
+	"targets": [
+		{
+			"id": "Microsoft.VisualStudio.Services"
+		}
+	],
+	"categories": [
+		"Build and release"
+	],
+	"icons": {
+		"default": "logo.png"
+	},
+	"content": {
+		"details": {
+			"path": "overview.md"
+		}
+	},
+	"repository": {
+		"type": "git",
+		"uri": "https://nventive.visualstudio.com/DevOps/_git/Build.Tasks" 
+	},
+	"contributions": [
+		{
+			"id": "nventive.canaryUpdater",
+			"type": "ms.vss-distributed-task.task",
+			"targets": [
+				"ms.vss-distributed-task.tasks"
+			],
+			"properties": {
+				"name": "canaryUpdater"
+			}
+		},
+		{
+			"id": "nventive.releaseNotesCompiler",
+			"type": "ms.vss-distributed-task.task",
+			"targets": [
+				"ms.vss-distributed-task.tasks"
+			],
+			"properties": {
+				"name": "releaseNotesCompiler"
+			}
+		},
+		{
+			"id": "nventive.websiteVersion",
+			"type": "ms.vss-distributed-task.task",
+			"targets": [
+				"ms.vss-distributed-task.tasks"
+			],
+			"properties": {
+				"name": "websiteVersion"
+			}
+		}
+	],
+	"scopes": [
+		"vso.work"
+	],
+	"files": [
+		{
+			"path": "canaryUpdater"
+		},
+		{
+			"path": "releaseNotesCompiler"
+		},
+		{
+			"path": "websiteVersion"
+		},
+		{
+			"path": "node_modules"
+		}
+	]
+}

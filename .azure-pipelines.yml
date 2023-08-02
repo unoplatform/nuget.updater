@@ -1,0 +1,36 @@
+pool: 'Windows 1809'
+
+trigger:
+  batch: true
+  branches:
+    include:
+    - master
+
+steps:
+- task: GitVersion@4
+
+- task: NodeTool@0
+
+- task: TfxInstaller@2
+  inputs:
+    version: 'v0.7.x'
+
+- task: Npm@1
+  inputs:
+    command: install
+
+- script: .\node_modules\.bin\tsc -project .\tsconfig.json --listEmittedFiles --locale en-US --isolatedModules
+
+- task: PackageAzureDevOpsExtension@2
+  inputs:
+    rootFolder: 
+    outputPath: '$(Build.ArtifactStagingDirectory)\Build.Tasks.$(GitVersion.MajorMinorPatch).vsix'
+    extensionVersion: '$(GitVersion.MajorMinorPatch)'
+    updateTasksVersion: true
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    ArtifactName: Extension
+
+- task: PostBuildCleanup@3
+  condition: always()

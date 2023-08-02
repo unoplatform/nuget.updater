@@ -1,0 +1,29 @@
+{
+	"name": "websiteversioning",
+	"version": "1.0.0",
+	"description": "An Azure DevOps task allowing the versioning of websites. Compatible with Azure Storage with Static Website.",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://dev.azure.com/nventive/DevOps/_git/Build.Tasks"
+	},
+	"author": "nventive",
+	"license": "ISC",
+	"keywords": [
+		"Azure Pipelines",
+		"Azure DevOps",
+		"Task"
+	],
+	"dependencies": {
+		"azure-pipelines-task-lib": "^2.9.3",
+		"azure-storage": "^2.10.3",
+		"jsonwebtoken": "^8.5.1",
+		"typed-rest-client": "^1.7.3"
+	},
+	"devDependencies": {
+		"@types/node": "^12.12.14",
+		"@types/q": "^1.5.2"
+	}
+}
