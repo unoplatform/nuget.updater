@@ -161,6 +161,8 @@ async function nugetUpdate(): Promise<boolean> {
     let strict = tl.getBoolInput("strict");
     let useVersionOverrides = tl.getBoolInput("useVersionOverrides");
     let versionOverridesFile = tl.getInput("versionOverridesFile");
+    let useUpdateProperties = tl.getBoolInput("useUpdateProperties");
+    let updatePropertiesFile = tl.getInput("updatePropertiesFile");
     let summaryFile = tl.getInput("summaryFile");
     let resultFile = tl.getInput("resultFile");
 
@@ -177,6 +179,7 @@ async function nugetUpdate(): Promise<boolean> {
 
         let summaryFileArg = null;
         let versionOverridesFileArg = null;
+        let updatePropertiesFileArg = null;
         let resultFileArg = null;
         let feedArg = null;
         let downgradeArg = null;
@@ -191,7 +194,11 @@ async function nugetUpdate(): Promise<boolean> {
             versionOverridesFileArg = "--versionOverrides=" + versionOverridesFile;
         }
 
-        if(resultFile) {
+        if (useUpdateProperties && updatePropertiesFile) {
+            updatePropertiesFileArg = "--updateProperties=" + updatePropertiesFile;
+        }
+
+        if (resultFile) {
             resultFileArg = "--result=" + resultFile;
         }
 
@@ -222,7 +229,8 @@ async function nugetUpdate(): Promise<boolean> {
                 summaryFileArg,
                 resultFileArg,
                 strictArg,
-                versionOverridesFileArg
+                versionOverridesFileArg,
+                updatePropertiesFileArg
             ]
             .concat(targetVersions.map(v => "--version=" + v))
             .concat(getListArgument("ignorePackages", ";", "ignore"))

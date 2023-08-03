@@ -325,6 +325,31 @@
 			"properties": {
 				"DisableManageLink": "True"
 			}
+		},
+		{
+			"name": "useUpdateProperties",
+			"type": "boolean",
+			"label": "Update properties",
+			"groupName": "updater",
+			"defaultValue": false,
+			"required": false,
+			"helpMarkDown": "Whether or not to use a update properties file",
+			"properties": {
+				"DisableManageLink": "True"
+			}
+		},
+		{
+			"name": "updatePropertiesFile",
+			"type": "string",
+			"label": "Update properties file",
+			"groupName": "updater",
+			"defaultValue": null,
+			"required": false,
+			"visibleRule": "useUpdateProperties = true",
+			"helpMarkDown": "Path/URL to a file to use for updating properties",
+			"properties": {
+				"DisableManageLink": "True"
+			}
 		}
 	],
 	"dataSourceBindings": [
