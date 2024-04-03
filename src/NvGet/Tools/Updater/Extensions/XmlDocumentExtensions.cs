@@ -1,7 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
+using Newtonsoft.Json;
 using NvGet.Extensions;
+using NvGet.Helpers;
 using NvGet.Tools.Updater.Log;
 using Uno.Extensions;
 
@@ -139,31 +142,57 @@ namespace NvGet.Tools.Updater.Extensions
 		/// <param name="operation"></param>
 		/// <returns></returns>
 		public static IEnumerable<UpdateOperation> UpdateDependencies(
-			this XmlDocument document,
+			this DocumentReference document,
 			UpdateOperation operation
 		)
 		{
-			var operations = new List<UpdateOperation>();
-
-			foreach(var node in document.SelectElements("dependency", $"[@id='{operation.PackageId}']"))
+			if(document is XmlDocumentReference xmlDocReference)
 			{
-				var versionNodeValue = node.GetAttribute("version");
+				var operations = new List<UpdateOperation>();
 
-				// only nodes with explicit version, skip expansion.
-				if(!versionNodeValue.Contains("{", System.StringComparison.OrdinalIgnoreCase))
+				foreach(var node in xmlDocReference.Document.SelectElements("dependency", $"[@id='{operation.PackageId}']"))
 				{
-					var currentOperation = operation.WithPreviousVersion(versionNodeValue);
+					var versionNodeValue = node.GetAttribute("version");
 
-					if(currentOperation.ShouldProceed())
+					// only nodes with explicit version, skip expansion.
+					if(!versionNodeValue.Contains("{", System.StringComparison.OrdinalIgnoreCase))
 					{
-						node.SetAttribute("version", currentOperation.UpdatedVersion.ToString());
+						var currentOperation = operation.WithPreviousVersion(versionNodeValue);
+
+						if(currentOperation.ShouldProceed())
+						{
+							node.SetAttribute("version", currentOperation.UpdatedVersion.ToString());
+						}
+
+						operations.Add(currentOperation);
 					}
+				}
+
+				return operations;
+			}
+			else if(document is JsonDocumentReference jsonDocReference)
+			{
+				var operations = new List<UpdateOperation>();
+
+				var globalJson = JsonConvert.DeserializeObject<GlobalJson>(jsonDocReference.Contents);
+
+				if(globalJson.MSBuildSdks.TryGetValue(operation.PackageId, out var value))
+				{
+					globalJson.MSBuildSdks[operation.PackageId] = operation.UpdatedVersion.ToString();
+
+					var currentOperation = operation.WithPreviousVersion(value);
 
 					operations.Add(currentOperation);
 				}
-			}
 
-			return operations;
+				jsonDocReference.Contents = JsonConvert.SerializeObject(globalJson);
+
+				return operations;
+			}
+			else
+			{
+				throw new NotSupportedException();
+			}
 		}
 	}
 }

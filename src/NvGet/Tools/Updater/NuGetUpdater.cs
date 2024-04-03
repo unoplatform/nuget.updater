@@ -144,7 +144,7 @@ namespace NvGet.Tools.Updater
 		   CancellationToken ct,
 		   UpdateOperation operation,
 		   Dictionary<FileType, string[]> targetFiles,
-		   Dictionary<string, XmlDocument> documents
+		   Dictionary<string, DocumentReference> documents
 	   )
 		{
 			var operations = new List<UpdateOperation>();
@@ -166,14 +166,19 @@ namespace NvGet.Tools.Updater
 
 					var currentOperation = operation.WithFilePath(path);
 
-					if(fileType.HasFlag(FileType.Nuspec))
+					if(fileType.HasFlag(FileType.Nuspec) && document is XmlDocumentReference xmlDocReference)
 					{
-						updates = document.UpdateDependencies(currentOperation);
+						updates = xmlDocReference.UpdateDependencies(currentOperation);
 					}
-					else if(fileType.HasAnyFlag(FileType.DirectoryProps, FileType.DirectoryTargets, FileType.Csproj, FileType.CentralPackageManagement))
+					else if(fileType.HasFlag(FileType.GlobalJson) && document is JsonDocumentReference jsonDocReference)
 					{
-						updates = document.UpdatePackageReferences(currentOperation);
-						var propertyUpdates = document.UpdateUpdateProperties(currentOperation, _parameters.UpdateProperties);
+						updates = jsonDocReference.UpdateDependencies(currentOperation);
+					}
+					else if(fileType.HasAnyFlag(FileType.DirectoryProps, FileType.DirectoryTargets, FileType.Csproj, FileType.CentralPackageManagement)
+						&& document is XmlDocumentReference xmlDocReference2)
+					{
+						updates = xmlDocReference2.Document.UpdatePackageReferences(currentOperation);
+						var propertyUpdates = xmlDocReference2.Document.UpdateUpdateProperties(currentOperation, _parameters.UpdateProperties);
 						updates = updates.Concat(propertyUpdates);
 					}
 

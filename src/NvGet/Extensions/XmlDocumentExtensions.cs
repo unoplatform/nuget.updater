@@ -121,21 +121,28 @@ namespace NvGet.Extensions
 		/// <param name="references"></param>
 		/// <param name="ct"></param>
 		/// <returns></returns>
-		public static async Task<Dictionary<string, XmlDocument>> OpenFiles(
+		public static async Task<Dictionary<string, DocumentReference>> OpenFiles(
 			this IEnumerable<PackageReference> references,
 			CancellationToken ct
 		)
 		{
 			var files = references
 				.SelectMany(r => r.Files)
-				.SelectMany(g => g.Value)
+				.SelectMany(g => g.Value.Select(file => (fileType: g.Key, file: file)))
 				.Distinct();
 
-			var documents = new Dictionary<string, XmlDocument>();
+			var documents = new Dictionary<string, DocumentReference>();
 
 			foreach(var file in files)
 			{
-				documents.Add(file, await file.LoadDocument(ct));
+				if(file.fileType == Contracts.FileType.GlobalJson)
+				{
+					documents.Add(file.file, new JsonDocumentReference(System.IO.File.ReadAllText(file.file)));
+				}
+				else
+				{
+					documents.Add(file.file, new XmlDocumentReference(await file.file.LoadDocument(ct)));
+				}
 			}
 
 			return documents;

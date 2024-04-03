@@ -39,8 +39,13 @@ namespace NvGet.Contracts
 		CentralPackageManagement = 32,
 
 		/// <summary>
+		/// global.json files.
+		/// </summary>
+		GlobalJson = 64,
+
+		/// <summary>
 		/// All the supported file types.
 		/// </summary>
-		All = Nuspec | Csproj | DirectoryProps | DirectoryTargets | CentralPackageManagement,
+		All = Nuspec | Csproj | DirectoryProps | DirectoryTargets | CentralPackageManagement | GlobalJson,
 	}
 }
