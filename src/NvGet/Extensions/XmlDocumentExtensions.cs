@@ -88,6 +88,35 @@ namespace NvGet.Extensions
 				}
 			}
 
+			// find all nodes inside a PropertyGroup node that for which the name is ending by Version
+			var propertyGroupVersionReferences = document
+				.SelectElements("PropertyGroup")
+				.SelectMany(pg => pg.SelectNodes("*").OfType<XmlElement>())
+				.Where(e => e.LocalName.EndsWith("Version", StringComparison.OrdinalIgnoreCase));
+
+			foreach(var versionProperty in propertyGroupVersionReferences)
+			{
+				var originalTrimmedName = versionProperty
+					.LocalName
+					.TrimEnd("Version");
+
+				var nameParts =
+					originalTrimmedName
+					.Select((c, i) =>
+						i > 0
+						&& char.IsUpper(c)
+						&& !char.IsUpper(originalTrimmedName[i - 1])
+						? "." + c
+						: c.ToString());
+
+				var packageName = string.Concat(nameParts).ToLowerInvariant();
+
+				if(NuGetVersion.TryParse(versionProperty.InnerText, out var nugetVersion))
+				{
+					references.Add(CreatePackageIdentity(packageName, versionProperty.InnerText));
+				}
+			}
+
 			return references
 				.Trim()
 				.ToArray();

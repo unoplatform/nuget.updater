@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
 using Newtonsoft.Json;
+using NuGet.Versioning;
 using NvGet.Extensions;
 using NvGet.Helpers;
 using NvGet.Tools.Updater.Log;
@@ -92,6 +93,23 @@ namespace NvGet.Tools.Updater.Extensions
 					}
 
 					operations.Add(currentOperation);
+				}
+			}
+
+			var propertyGroupVersionReferences = document
+				.SelectElements("PropertyGroup")
+				.SelectMany(pg => pg.SelectNodes(packageId.Replace(".", "") + "Version").OfType<XmlElement>());
+
+			foreach(var versionProperty in propertyGroupVersionReferences)
+			{
+				if(NuGetVersion.TryParse(versionProperty.InnerText, out var previousVersion))
+				{
+					var currentOperation = operation.WithPreviousVersion(versionProperty.InnerText);
+
+					if(currentOperation.ShouldProceed())
+					{
+						versionProperty.InnerText = currentOperation.UpdatedVersion.ToString();
+					}
 				}
 			}
 

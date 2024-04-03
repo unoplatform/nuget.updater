@@ -94,3 +94,15 @@ properties.json example:
 ]
 ```
 In this case the `UnoVersion` property will be updated to the latest version of `Uno.UI` found in the solution.
+
+## Supported types of updates
+
+The nuget updater supports updating:
+- `.csproj`, `Directory.Build.props`, `Directory.Build.targets` and `Directory.Packages.props`
+    For this type of files, the tool will update:
+    - `PackageReference` and `PackageVersion` items
+    - MSBuild properties using named this way `UnoWinUIVersion` or `UnoExtensionsNavigationVersion`
+- `.nuspec`
+  For this type of files, the tool will update `reference` entries.
+- `global.json`
+  For this type of files, the tool will update `msbuild-sdk` entries

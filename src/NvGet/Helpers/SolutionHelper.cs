@@ -140,7 +140,16 @@ namespace NvGet.Helpers
 			else
 			{
 				var solutionFolder = Path.GetDirectoryName(solutionPath);
-				file = Path.Combine(solutionFolder, target.GetDescription());
+
+				if(target is FileType.DirectoryProps or FileType.DirectoryTargets or FileType.GlobalJson or FileType.CentralPackageManagement)
+				{
+					var matchingFiles = await FileHelper.GetFiles(ct, solutionFolder, nameFilter: target.GetDescription());
+					return matchingFiles.ToArray();
+				}
+				else
+				{
+					file = Path.Combine(solutionFolder, target.GetDescription());
+				}
 			}
 
 			if(file.HasValue() && await FileHelper.Exists(file))
