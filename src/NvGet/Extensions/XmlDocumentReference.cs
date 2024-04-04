@@ -34,7 +34,7 @@ namespace NvGet.Extensions
 
 		public override async Task Save(CancellationToken ct, string path)
 		{
-			Document.Save(ct, path);
+			await Document.Save(ct, path);
 		}
 	}
 }
