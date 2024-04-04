@@ -231,10 +231,4 @@ namespace NvGet.Helpers
 				.ToArray();
 		}
 	}
-
-	public class GlobalJson
-	{
-		[JsonProperty("msbuild-sdks")]
-		public Dictionary<string, string> MSBuildSdks { get; set; }
-	}
 }
