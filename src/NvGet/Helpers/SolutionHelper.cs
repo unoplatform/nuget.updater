@@ -222,7 +222,8 @@ namespace NvGet.Helpers
 
 			var references = globalJson
 				?.MSBuildSdks
-				?.Select(s => new PackageIdentity(s.Key, new NuGetVersion(s.Value)))
+				?.Select(s => NuGetVersion.TryParse(s.Value, out var version) ? new PackageIdentity(s.Key, version) : null)
+				?.Where(v => v is not null)
 				.ToArray() ?? Array.Empty<PackageIdentity>();
 
 			return references
