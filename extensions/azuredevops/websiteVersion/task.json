@@ -6,7 +6,7 @@
     "description": "Make mutliple versions of a website available at once.",
     "helpMarkDown": "Currently only compatible with an Azure Storage Static Website",
     "category": "Deploy",
-    "author": "nventive",
+    "author": "unoplatform",
     "version": {
         "Major": 0,
         "Minor": 0,

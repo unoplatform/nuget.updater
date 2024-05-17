@@ -1,6 +1,6 @@
 {
-	"name": "canary.updater",
-	"description": "Task allowing easy update of Canary build",
+	"name": "releasenotes.compiler",
+	"description": "Task allowing the compiling of release notes",
 	"scripts": {
 		"test": "echo 'Hello world"
 	},
@@ -11,12 +11,12 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "https://nventive.visualstudio.com/DevOps/_git/Build.Tasks"
+		"url": "https://unoplatform.visualstudio.com/DevOps/_git/Build.Tasks"
 	},
 	"keywords": [
-		"VSTS",
-		"Build",
+		"Azure DevOps",
+		"Azure Pipelines",
 		"Task"
 	],
-	"author": "nventive"
+	"author": "unoplatform"
 }

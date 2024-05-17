@@ -7,9 +7,9 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "https://dev.azure.com/nventive/DevOps/_git/Build.Tasks"
+		"url": "https://dev.azure.com/unoplatform/DevOps/_git/Build.Tasks"
 	},
-	"author": "nventive",
+	"author": "unoplatform",
 	"license": "ISC",
 	"keywords": [
 		"Azure Pipelines",

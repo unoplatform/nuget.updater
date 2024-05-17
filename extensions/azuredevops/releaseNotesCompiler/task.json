@@ -3,9 +3,9 @@
 	"name": "nventiveReleaseNotesCompiler",
 	"friendlyName": "Release Notes Compiler",
 	"description": "A task to generate a markdown file containing release notes for a given release.",
-	"helpMarkDown": "[nventive](http://www.nventive.com/)",
+	"helpMarkDown": "[unoplatform](http://www.unoplatform.com/)",
 	"category": "Azure Pipelines",
-	"author": "nventive",
+	"author": "unoplatform",
 	"version": {
 		"Major": 0,
 		"Minor": 0,

@@ -1,7 +1,7 @@
 {
-  "name": "nventive.buildtools",
+  "name": "unoplatform.buildtools",
   "version": "0.1.0",
-  "description": "Build tools for nventive",
+  "description": "Build tools for unoplatform",
   "scripts": {
     "preinstall": "node dependencies.js"
   },
@@ -16,12 +16,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://nventive.visualstudio.com/DevOps/_git/Build.Tasks"
+    "url": "https://unoplatform.visualstudio.com/DevOps/_git/Build.Tasks"
   },
   "keywords": [
     "VSTS",
     "Build",
     "Task"
   ],
-  "author": "nventive"
+  "author": "unoplatform"
 }

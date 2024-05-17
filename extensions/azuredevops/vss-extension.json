@@ -1,9 +1,9 @@
 {
 	"manifestVersion": 1,
-	"id": "nventive",
+	"id": "unoplatform",
 	"version": "0.0.0",
-	"name": "nventive Build Tools",
-	"description": "A set of build tools developed by nventive",
+	"name": "unoplatform Build Tools",
+	"description": "A set of build tools developed by unoplatform",
 	"publisher": "nventivecorp",
 	"targets": [
 		{
@@ -23,11 +23,11 @@
 	},
 	"repository": {
 		"type": "git",
-		"uri": "https://nventive.visualstudio.com/DevOps/_git/Build.Tasks" 
+		"uri": "https://unoplatform.visualstudio.com/DevOps/_git/Build.Tasks" 
 	},
 	"contributions": [
 		{
-			"id": "nventive.canaryUpdater",
+			"id": "unoplatform.canaryUpdater",
 			"type": "ms.vss-distributed-task.task",
 			"targets": [
 				"ms.vss-distributed-task.tasks"
@@ -37,7 +37,7 @@
 			}
 		},
 		{
-			"id": "nventive.releaseNotesCompiler",
+			"id": "unoplatform.releaseNotesCompiler",
 			"type": "ms.vss-distributed-task.task",
 			"targets": [
 				"ms.vss-distributed-task.tasks"
@@ -47,7 +47,7 @@
 			}
 		},
 		{
-			"id": "nventive.websiteVersion",
+			"id": "unoplatform.websiteVersion",
 			"type": "ms.vss-distributed-task.task",
 			"targets": [
 				"ms.vss-distributed-task.tasks"

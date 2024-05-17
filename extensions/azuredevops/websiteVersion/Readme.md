@@ -1,4 +1,4 @@
-# nventive Website versioning
+# unoplatform Website versioning
 
 This task is meant to help with versioning a static website. It was developed as a mean to maintain multiple versions of WASM-based Uno applications. The concept is very simple:
 - The contents of the website are stored in an Azure Blob storage

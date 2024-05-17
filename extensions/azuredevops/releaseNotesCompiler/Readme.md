@@ -1,4 +1,4 @@
-# nventive Release Notes compiler task
+# unoplatform Release Notes compiler task
 
 This straightforward task is used to help with the generation of basic release notes in the markdown format. The primary use case for those notes was AppCenter, but it can be adapted to fit any use. The flow is pretty simple, and consists mostly of gathering information on the pipeline run and writing those in a file. Here's a list of the information included in the resulting file:
 - An optional environment passed as a parameter to the task (`EnvironmentName`) - useful to make sure that we're using the right build
