@@ -1,0 +1,38 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+		<TargetFramework>net5.0</TargetFramework>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<PackAsTool>true</PackAsTool>
+		<ToolCommandName>nugetdownloader</ToolCommandName>
+		<LangVersion>latest</LangVersion>
+		<TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);CopyProjectReferencesToPackage</TargetsForTfmSpecificBuildOutput>
+	</PropertyGroup>
+
+	<!-- NuGet metadata -->
+	<PropertyGroup>
+		<PackageId>unoplatform.NuGet.Downloader.Tool</PackageId>
+		<Authors>unoplatform</Authors>
+		<Owners>unoplatform</Owners>
+		<Description>Nuget Dowloader allows to download the NuGet packages found in a solution</Description>
+		<PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+		<PackageIcon>icon.png</PackageIcon>
+		<PackageProjectUrl>https://github.com/unoplatform/NuGet.Updater</PackageProjectUrl>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<None Include="../icon.png">
+			<Pack>True</Pack>
+			<PackagePath />
+		</None>
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Mono.Options" Version="6.6.0.161" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\NvGet\NvGet.csproj" />
+	</ItemGroup>
+</Project>
