@@ -1,3 +1,7 @@
+---
+uid: uno.tools.nuget.hierarchy
+---
+
 ## About
 
 NuGet.Hierarcy allows to display the full hierarchy of the NuGet packages for a solution.

@@ -1,3 +1,7 @@
+---
+uid: uno.tools.nuget.downloader
+---
+
 ## About
 
 NuGet.Downloader allows to download all NuGet packages found in a solution, and also to push them to a specific NuGet feed.

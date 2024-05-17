@@ -1,3 +1,7 @@
+---
+uid: uno.tools.nuget.updater
+---
+
 ## About
 
 NuGet.Updater allows batch updates of NuGet packages found in solutions.

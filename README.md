@@ -6,20 +6,16 @@ NuGet packages manipulations made easy.
 
 ## NuGet.Updater
 
-Documentation about the NuGet.Updater can be found [here](src/NvGet.Tools.Updater/Readme.md)
+Documentation about the NuGet.Updater can be found [here](doc/nuget-updater.md)
 
 ## NuGet.Downloader
 
-Documentation about the NuGet.Downloader can be found [here](src/NvGet.Tools.Downloader/README.md)
+Documentation about the NuGet.Downloader can be found [here](doc/nuget-downloader.md)
 
 ## NuGet.Hierarchy
 
-Documentation about the NuGet.Hierarchy can be found [here](src/NvGet.Tools.Hierarchy/README.md)
+Documentation about the NuGet.Hierarchy can be found [here](doc/nuget-hierarchy.md)
 
-## Changelog
-
-Please consult the [CHANGELOG](CHANGELOG.md) for more information about version
-history.
 
 ## License
 
@@ -34,3 +30,5 @@ contributing to this project.
 Be mindful of our [Code of Conduct](CODE_OF_CONDUCT.md).
 
 ## Acknowledgments
+
+This repository is a fork of nventive's NuGet Updater.

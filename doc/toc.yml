@@ -1,0 +1,7 @@
+items:
+- name: Using the NuGet Updater
+  href: xref:uno.tools.nuget.updater
+- name: Using the NuGet Downloader
+  href: xref:uno.tools.nuget.downloader
+- name: Using the NuGet Hierarchy Viewer
+  href: xref:uno.tools.nuget.hierarchy
