@@ -21,7 +21,7 @@ namespace NvGet.Tests
 			};
 
 			var packageVersion = "1.0-beta.1";
-			var packageId = "nventive.NuGet.Updater";
+			var packageId = "unoplatform.NuGet.Updater";
 
 			var reference = new PackageReference(packageId, packageVersion);
 
@@ -40,7 +40,7 @@ namespace NvGet.Tests
 			};
 
 			var packageVersion = "1.0-beta.1";
-			var packageId = "nventive.NuGet.Updater";
+			var packageId = "unoplatform.NuGet.Updater";
 
 			var reference = new PackageReference(packageId, packageVersion);
 
@@ -52,7 +52,7 @@ namespace NvGet.Tests
 		[TestMethod]
 		public async Task GivenManualUpdates_AndVersionNotInFeed_ManualVersionIsFound()
 		{
-			var reference = new PackageReference("nventive.NuGet.Updater", "1.0");
+			var reference = new PackageReference("unoplatform.NuGet.Updater", "1.0");
 
 			var parameters = new UpdaterParameters
 			{

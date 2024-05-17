@@ -8,13 +8,13 @@
 
 	<!-- NuGet metadata -->
 	<PropertyGroup>
-		<PackageId>nventive.NuGet.Updater</PackageId>
-		<Authors>nventive</Authors>
-		<Owners>nventive</Owners>
+		<PackageId>unoplatform.NuGet.Updater</PackageId>
+		<Authors>unoplatform</Authors>
+		<Owners>unoplatform</Owners>
 		<Description>Nuget Updater allows to automatically update the NuGet packages in a solution at build time</Description>
 		<PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
 		<PackageIcon>icon.png</PackageIcon>
-		<PackageProjectUrl>https://github.com/nventive/NuGet.Updater</PackageProjectUrl>
+		<PackageProjectUrl>https://github.com/unoplatform/NuGet.Updater</PackageProjectUrl>
 	</PropertyGroup>
 
 	<ItemGroup>

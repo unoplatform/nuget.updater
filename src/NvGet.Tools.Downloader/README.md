@@ -5,7 +5,7 @@ NuGet.Downloader allows to download all NuGet packages found in a solution, and 
 ## Getting Started
 
 The NuGet Downloader can be installed as a standalone .Net Core tool using the following command:
-`dotnet tool install -g nventive.NuGet.Downloader.Tool`
+`dotnet tool install -g unoplatform.NuGet.Downloader.Tool`
 
 Help can be found with :
 `nugetdownloader --help`

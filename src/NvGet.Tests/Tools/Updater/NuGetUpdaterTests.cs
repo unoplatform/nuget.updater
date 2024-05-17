@@ -19,7 +19,7 @@ namespace NvGet.Tests.Tools
 		{
 			{"Uno.UI", new[] { "1.0", "1.1-dev.1" } },
 			{"Uno.Core", new[] { "1.0", "1.0-beta.1" } },
-			{"nventive.NuGet.Updater", new[] { "1.0-beta.1" } },
+			{"unoplatform.NuGet.Updater", new[] { "1.0-beta.1" } },
 		};
 
 		private static readonly TestPackageFeed TestFeed = new TestPackageFeed(new Uri("http://localhost"), TestPackages);

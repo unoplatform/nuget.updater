@@ -13,14 +13,14 @@
 
 	<!-- NuGet metadata -->
 	<PropertyGroup>
-		<PackageId>nventive.NuGet.Updater.Tool</PackageId>
+		<PackageId>unoplatform.NuGet.Updater.Tool</PackageId>
 		<Title>NuGet Updater Tool</Title>
 		<Description>A netcore version of the NuGet updater</Description>
-		<Authors>nventive</Authors>
-		<Owners>nventive</Owners>
+		<Authors>unoplatform</Authors>
+		<Owners>unoplatform</Owners>
 		<PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
 		<PackageIcon>icon.png</PackageIcon>
-		<PackageProjectUrl>https://github.com/nventive/NuGet.Updater</PackageProjectUrl>
+		<PackageProjectUrl>https://github.com/unoplatform/NuGet.Updater</PackageProjectUrl>
 	</PropertyGroup>
 
 	<ItemGroup>

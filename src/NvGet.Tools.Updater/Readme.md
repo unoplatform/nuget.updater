@@ -5,7 +5,7 @@ NuGet.Updater allows batch updates of NuGet packages found in solutions.
 ## Getting Started
 
 The NuGet Updater can be installed as a standalone .Net Core tool using the following command:
-`dotnet tool install -g nventive.NuGet.Updater.Tool`
+`dotnet tool install -g unoplatform.NuGet.Updater.Tool`
 
 Help can be found with :
 `nugetupdater --help`
@@ -38,14 +38,14 @@ nugetupdater -s=MySolution.sln -n --version=beta -v=alpha
 nugetupdater -s=MySolution.sln --feed=https://pkgs.dev.azure.com/account/_packaging/feed/nuget/v3/index.json|personalaccesstoken --version=beta
 ```
 
-- Update packages from `nventive` from NuGet.org, except for `PackageA` and `PackageB`
+- Update packages from `unoplatform` from NuGet.org, except for `PackageA` and `PackageB`
 ```
-nugetupdater -s=MySolution.sln -n --packageAuthor=nventive --ignore=PackageA -i=PackageB
+nugetupdater -s=MySolution.sln -n --packageAuthor=unoplatform --ignore=PackageA -i=PackageB
 ```
 
-- Update packages from `nventive` and `microsoft` from NuGet.org, except for `PackageA` and `PackageB`
+- Update packages from `unoplatform` and `microsoft` from NuGet.org, except for `PackageA` and `PackageB`
 ```
-nugetupdater -s=MySolution.sln -n --packageAuthor=nventive,microsoft --ignore=PackageA -i=PackageB
+nugetupdater -s=MySolution.sln -n --packageAuthor=unoplatform,microsoft --ignore=PackageA -i=PackageB
 ```
 
 - Update only `PackageA` and `PackageB` from NuGet.org and a private feed
