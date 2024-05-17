@@ -11,8 +11,8 @@ on:
       - main
       
 jobs:
-  build:
-    name: Build
+  build-tools:
+    name: Build Tools
     runs-on: windows-2022
     steps:
     - name: Checkout
@@ -58,12 +58,43 @@ jobs:
         name: NuGet
         path: .\artifacts
 
-  publish:
+  build-extensions:
+    name: Build Extensions
+    runs-on: windows-2022
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+
+    - name: Install tfx
+      working-directory: extensions/azuredevops
+      run: npm install tfx-cli@0.7.x -g --no-audit --no-fund
+
+    - name: npm install
+      working-directory: extensions/azuredevops
+      run: npm install tfx-cli@0.7.x -g --no-audit --no-fund
+
+    - name: Compile
+      working-directory: extensions/azuredevops
+      run: .\node_modules\.bin\tsc -project .\tsconfig.json --listEmittedFiles --locale en-US --isolatedModules
+
+    - name: Package Extension
+      working-directory: extensions/azuredevops
+      run: tfx extension create --json --no-color --output-path .\artifacts\Build.Tasks.$(GitVersion.MajorMinorPatch).vsix --override "{\"version\":\"$(GitVersion.MajorMinorPatch)\"}"
+
+    - name: Upload Artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: extensions
+        path: .\artifacts
+
+  publish-tools:
     name: Publish
     if: ${{ github.event_name == 'push' && (github.ref == 'refs/heads/develop' || startsWith(github.ref, 'refs/heads/master')) }}
     runs-on: windows-latest
     needs:
-      - build
+      - build-tools
     steps:
       - name: Checkout
         uses: actions/checkout@v2

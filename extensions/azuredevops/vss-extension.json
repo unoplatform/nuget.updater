@@ -1,10 +1,10 @@
 {
 	"manifestVersion": 1,
-	"id": "unoplatform",
+	"id": "unoplatform-build-tools",
 	"version": "0.0.0",
 	"name": "unoplatform Build Tools",
-	"description": "A set of build tools developed by unoplatform",
-	"publisher": "nventivecorp",
+	"description": "The Canary Updater tool by Uno Platform",
+	"publisher": "unoplatform",
 	"targets": [
 		{
 			"id": "Microsoft.VisualStudio.Services"
@@ -35,26 +35,6 @@
 			"properties": {
 				"name": "canaryUpdater"
 			}
-		},
-		{
-			"id": "unoplatform.releaseNotesCompiler",
-			"type": "ms.vss-distributed-task.task",
-			"targets": [
-				"ms.vss-distributed-task.tasks"
-			],
-			"properties": {
-				"name": "releaseNotesCompiler"
-			}
-		},
-		{
-			"id": "unoplatform.websiteVersion",
-			"type": "ms.vss-distributed-task.task",
-			"targets": [
-				"ms.vss-distributed-task.tasks"
-			],
-			"properties": {
-				"name": "websiteVersion"
-			}
 		}
 	],
 	"scopes": [
@@ -63,12 +43,6 @@
 	"files": [
 		{
 			"path": "canaryUpdater"
-		},
-		{
-			"path": "releaseNotesCompiler"
-		},
-		{
-			"path": "websiteVersion"
 		},
 		{
 			"path": "node_modules"
