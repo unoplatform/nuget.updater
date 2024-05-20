@@ -19,7 +19,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="System.Security.Cryptography.ProtectedData" Version="5.0.0" />
-		<PackageReference Include="Uno.Core" Version="2.0.0" />
+		<PackageReference Include="Uno.Core" Version="4.0.1" />
 		<PackageReference Include="NuGet.Protocol" Version="6.0.5" />
 		<PackageReference Include="System.ValueTuple" Version="4.5.0" />
 	</ItemGroup>
