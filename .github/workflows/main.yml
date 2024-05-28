@@ -208,6 +208,9 @@ jobs:
       - build-extensions
 
     steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
       - name: Download Artifacts
         uses: actions/download-artifact@v2
         with:
