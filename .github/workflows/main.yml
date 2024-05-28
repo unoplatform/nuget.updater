@@ -14,6 +14,9 @@ concurrency:
   group: ${{github.workflow}} - ${{github.ref}}
   cancel-in-progress: true
 
+env:
+  GitVersion_Version: '5.6.x'
+
 jobs:
   build-tools:
     name: Build Tools
@@ -37,7 +40,7 @@ jobs:
     - name: Setup GitVersion
       uses: gittools/actions/gitversion/setup@v0.9.9
       with:
-        versionSpec: '5.6.x'
+        versionSpec: ${{ env.GitVersion_Version }}
 
     - name: GitVersion
       id: gitversion
