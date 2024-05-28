@@ -1,0 +1,51 @@
+{
+	"manifestVersion": 1,
+	"id": "unoplatform-build-tools",
+	"version": "0.0.0",
+	"name": "unoplatform Build Tools",
+	"description": "The Canary Updater tool by Uno Platform",
+	"publisher": "unoplatform",
+	"targets": [
+		{
+			"id": "Microsoft.VisualStudio.Services"
+		}
+	],
+	"categories": [
+		"Build and release"
+	],
+	"icons": {
+		"default": "logo.png"
+	},
+	"content": {
+		"details": {
+			"path": "overview.md"
+		}
+	},
+	"repository": {
+		"type": "git",
+		"uri": "https://unoplatform.visualstudio.com/DevOps/_git/Build.Tasks" 
+	},
+	"contributions": [
+		{
+			"id": "unoplatform.canaryUpdater",
+			"type": "ms.vss-distributed-task.task",
+			"targets": [
+				"ms.vss-distributed-task.tasks"
+			],
+			"properties": {
+				"name": "canaryUpdater"
+			}
+		}
+	],
+	"scopes": [
+		"vso.work"
+	],
+	"files": [
+		{
+			"path": "canaryUpdater"
+		},
+		{
+			"path": "node_modules"
+		}
+	]
+}

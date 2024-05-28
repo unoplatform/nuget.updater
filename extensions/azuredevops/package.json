@@ -1,0 +1,27 @@
+{
+  "name": "unoplatform.buildtools",
+  "version": "0.1.0",
+  "description": "Build tools for unoplatform",
+  "scripts": {
+    "preinstall": "node dependencies.js"
+  },
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^12.6.9",
+    "@types/q": "^1.5.2",
+    "azure-pipelines-task-lib": "^2.7.7",
+    "typescript": "^3.5.3",
+    "azure-devops-node-api": "^9.0.1",
+    "typed-rest-client": "^1.5.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://unoplatform.visualstudio.com/DevOps/_git/Build.Tasks"
+  },
+  "keywords": [
+    "VSTS",
+    "Build",
+    "Task"
+  ],
+  "author": "unoplatform"
+}
