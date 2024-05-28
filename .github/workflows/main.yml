@@ -116,7 +116,7 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: extensions
-        path: .\artifacts
+        path: extensions/azuredevops/artifacts
 
   publish-tools:
     name: Publish
