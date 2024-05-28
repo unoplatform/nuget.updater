@@ -31,4 +31,4 @@ Be mindful of our [Code of Conduct](CODE_OF_CONDUCT.md).
 
 ## Acknowledgments
 
-This repository is a fork of nventive's NuGet Updater.
+This repository is a fork of [nventive's NuGet Updater](https://github.com/nventive/NuGet.Updater) and [build tools](https://github.com/nventive/nventive-Build-Tools).
