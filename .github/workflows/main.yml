@@ -118,11 +118,12 @@ jobs:
         name: extensions
         path: extensions/azuredevops/artifacts
 
-  publish-tools:
-    name: Publish
-    if: ${{ github.event_name == 'push' && (github.ref == 'refs/heads/develop' || startsWith(github.ref, 'refs/heads/master')) }}
+  sign:
+    name: Sign Packages
+    if: ${{ github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/')) }}
     runs-on: windows-latest
     needs:
+      - build-extensions
       - build-tools
     steps:
       - name: Checkout
@@ -139,6 +140,85 @@ jobs:
         with:
           dotnet-version: '3.1.x'
 
-      - name: NuGet Push
+      - name: Setup SignClient
         run: |
-          dotnet nuget push artifacts\*.nupkg -s https://api.nuget.org/v3/index.json -k ${{ secrets.NUGET_ORG_API_KEY }}
+          dotnet tool install --tool-path build SignClient
+
+      - name: SignClient
+        shell: pwsh
+        run: |
+          build\SignClient sign -i artifacts\*.nupkg -c build\SignClient.json -r "${{ secrets.UNO_PLATFORM_CODESIGN_USERNAME }}" -s "${{ secrets.UNO_PLATFORM_CODESIGN_SECRET }}" -n "Uno Nuget Tools" -d "Uno Nuget Tools" -u "https://github.com/unoplatform/nuget.updater"
+
+      - name: Upload Signed Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: NuGet-Signed
+          path: .\artifacts
+
+  publish_nuget_dev:
+    name: Publish NuGet Dev
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+    runs-on: windows-latest
+
+    needs:
+      - sign
+
+    steps:
+      - name: Download Artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: NuGet-Signed
+          path: artifacts
+
+      - name: NuGet Push
+        shell: pwsh
+        run: |
+          dotnet nuget push artifacts\*.nupkg -s https://api.nuget.org/v3/index.json -k "${{ secrets.NUGET_ORG_API_KEY }}"
+
+  publish_nuget_prod:
+    name: Publish NuGet Production
+    if: ${{ github.event_name == 'push' && startsWith(github.ref, 'refs/heads/release/') }}
+    runs-on: windows-latest
+    environment: 'Nuget Production'
+
+    needs:
+      - sign
+
+    steps:
+      - name: Download Artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: NuGet-Signed
+          path: artifacts
+
+      - name: NuGet Push
+        shell: pwsh
+        run: |
+          dotnet nuget push artifacts\*.nupkg -s https://api.nuget.org/v3/index.json -k "${{ secrets.NUGET_ORG_API_KEY }}"
+
+  publish_extensions_prod:
+    name: Publish Extensions Production
+    if: ${{ github.event_name == 'push' && startsWith(github.ref, 'refs/heads/release/') }}
+    runs-on: windows-latest
+    environment: 'Extension Production'
+
+    needs:
+      - build-extensions
+
+    steps:
+      - name: Download Artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: extensions
+          path: artifacts
+
+      - name: Publish to VS Marketplace
+        shell: pwsh
+        run: |
+            dotnet tool update -g dotnet-vs
+            $vsix = Get-ChildItem -Path .\artifacts -Filter *.vsix | Select-Object -First 1
+
+            & "$(vs where release --prop=InstallationPath)/VSSDK/VisualStudioIntegration/Tools/Bin/VsixPublisher.exe" publish `
+            -payload "$vsix" `
+            -publishManifest "extensions/azuredevops/vss-extension.json" `
+            -personalAccessToken "$(VS_VSIX_PAT)"
