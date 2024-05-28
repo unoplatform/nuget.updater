@@ -210,7 +210,7 @@
 			"type": "string",
 			"label": "NuGet Updater version",
 			"groupName": "updater",
-			"defaultValue": "2.1.1",
+			"defaultValue": "1.0.0",
 			"required": true,
 			"helpMarkDown": "The of the NuGet updater to use. See https://www.nuget.org/packages/unoplatform.nuget.updater.tool for the list of available versions",
 			"properties": {
