@@ -21,10 +21,10 @@
 			"path": "overview.md"
 		}
 	},
-	"repository": {
-		"type": "git",
-		"uri": "https://unoplatform.visualstudio.com/DevOps/_git/Build.Tasks" 
-	},
+  "repository": {
+	"type": "git",
+	"uri": "https://github.com/unoplatform/nuget.updater"
+  },
 	"contributions": [
 		{
 			"id": "unoplatform.canaryUpdater",
