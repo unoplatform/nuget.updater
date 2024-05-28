@@ -224,7 +224,6 @@ jobs:
       - name: Publish to VS Marketplace
         shell: pwsh
         run: |
-            dotnet tool update -g dotnet-vs
             $vsix = Get-ChildItem -Path .\artifacts -Filter *.vsix | Select-Object -First 1
 
             tfx extension publish --vsix "$vsix" -t "${{ secrets.VS_VSIX_PAT }}"
