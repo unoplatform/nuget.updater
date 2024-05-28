@@ -2,7 +2,7 @@
 	"manifestVersion": 1,
 	"id": "unoplatform-build-tools",
 	"version": "0.0.0",
-	"name": "unoplatform Build Tools",
+	"name": "Uno Platform Build Tools",
 	"description": "The Canary Updater tool by Uno Platform",
 	"publisher": "unoplatform",
 	"public": true,
