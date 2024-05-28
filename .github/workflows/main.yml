@@ -222,5 +222,5 @@ jobs:
 
             & "$(vs where release --prop=InstallationPath)/VSSDK/VisualStudioIntegration/Tools/Bin/VsixPublisher.exe" publish `
             -payload "$vsix" `
-            -publishManifest "$env:GITHUB_WORKSPACE/extensions/azuredevops/vss-extension.json" `
+            -publishManifest "$env:GITHUB_WORKSPACE\extensions\azuredevops\vss-extension.json" `
             -personalAccessToken "${{ secrets.VS_VSIX_PAT }}"
