@@ -13,14 +13,13 @@
 
 	<!-- NuGet metadata -->
 	<PropertyGroup>
-		<PackageId>unoplatform.NuGet.Updater.Tool</PackageId>
+		<PackageId>Uno.NuGet.Updater.Tool</PackageId>
 		<Title>NuGet Updater Tool</Title>
-		<Description>A netcore version of the NuGet updater</Description>
+		<Description>A tool to automatically update nuget packages to stable or experimental versions</Description>
 		<Authors>unoplatform</Authors>
 		<Owners>unoplatform</Owners>
 		<PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-		<PackageIcon>icon.png</PackageIcon>
-		<PackageProjectUrl>https://github.com/unoplatform/NuGet.Updater</PackageProjectUrl>
+		<PackageProjectUrl>https://github.com/unoplatform/nuget.updater</PackageProjectUrl>
 	</PropertyGroup>
 
 	<ItemGroup>

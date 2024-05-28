@@ -8,12 +8,11 @@
 
 	<!-- NuGet metadata -->
 	<PropertyGroup>
-		<PackageId>unoplatform.NuGet.Updater</PackageId>
+		<PackageId>Uno.NuGet.Updater</PackageId>
 		<Authors>unoplatform</Authors>
 		<Owners>unoplatform</Owners>
 		<Description>Nuget Updater allows to automatically update the NuGet packages in a solution at build time</Description>
 		<PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-		<PackageIcon>icon.png</PackageIcon>
 		<PackageProjectUrl>https://github.com/unoplatform/NuGet.Updater</PackageProjectUrl>
 	</PropertyGroup>
 
