@@ -217,13 +217,15 @@ jobs:
           name: extensions
           path: artifacts
 
+      - name: Install tfx
+        working-directory: extensions/azuredevops
+        run: npm install tfx-cli@0.7.x -g --no-audit --no-fund
+    
       - name: Publish to VS Marketplace
         shell: pwsh
         run: |
             dotnet tool update -g dotnet-vs
             $vsix = Get-ChildItem -Path .\artifacts -Filter *.vsix | Select-Object -First 1
 
-            & "$(vs where release --prop=InstallationPath)/VSSDK/VisualStudioIntegration/Tools/Bin/VsixPublisher.exe" publish `
-            -payload "$vsix" `
-            -publishManifest "$env:GITHUB_WORKSPACE\extensions\azuredevops\vss-extension.json" `
-            -personalAccessToken "${{ secrets.VS_VSIX_PAT }}"
+            tfx extension publish --vsix "$vsix" -t "${{ secrets.VS_VSIX_PAT }}"
+
