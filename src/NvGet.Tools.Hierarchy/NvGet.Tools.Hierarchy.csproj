@@ -12,13 +12,12 @@
 
 	<!-- NuGet metadata -->
 	<PropertyGroup>
-		<PackageId>unoplatform.NuGet.Hierarchy.Tool</PackageId>
+		<PackageId>Uno.NuGet.Hierarchy.Tool</PackageId>
 		<Title>NuGet Hierarchy Tool</Title>
 		<Description>NuGet Hierarchy allows you to view the dependency tree of a solution</Description>
 		<Authors>unoplatform</Authors>
 		<Owners>unoplatform</Owners>
 		<PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-		<PackageIcon>icon.png</PackageIcon>
 		<PackageProjectUrl>https://github.com/unoplatform/NuGet.Updater</PackageProjectUrl>
 	</PropertyGroup>
 
