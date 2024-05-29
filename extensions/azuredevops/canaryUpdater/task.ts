@@ -395,7 +395,7 @@ async function installNuGetUpdater(): Promise<boolean> {
     let dotnet = tl.tool(dotnetPath);
 
     let installationTool = dotnet
-        .arg([ "tool", "install", "unoplatform.NuGet.Updater.Tool", "--version", toolVersion, "--tool-path", tl.getVariable("Agent.TempDirectory"), "--ignore-failed-sources" ]);
+        .arg([ "tool", "install", "Uno.NuGet.Updater.Tool", "--version", toolVersion, "--tool-path", tl.getVariable("Agent.TempDirectory"), "--ignore-failed-sources" ]);
 
     await installationTool.exec(<IExecOptions>{ outStream: getConsoleStream(false) });
 

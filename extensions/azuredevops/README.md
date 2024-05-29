@@ -1,6 +1,6 @@
 # unoplatform-Build-Tools
 
-This is the code for the [unoplatform Build Tools](https://marketplace.visualstudio.com/items?itemName=nventivecorp.unoplatform) Azure Pipelines extension.
+This is the code for the [Uno Build Tools](https://marketplace.visualstudio.com/items?itemName=nventivecorp.unoplatform) Azure Pipelines extension.
 
 ## Features
 
