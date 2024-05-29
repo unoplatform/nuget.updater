@@ -2,16 +2,26 @@
 	"manifestVersion": 1,
 	"id": "unoplatform-build-tools",
 	"version": "0.0.0",
-	"name": "unoplatform Build Tools",
+	"name": "Uno Platform Build Tools",
 	"description": "The Canary Updater tool by Uno Platform",
 	"publisher": "unoplatform",
+	"public": true,
+	"tags": [
+		"Extension",
+		"Marketplace",
+		"Package",
+		"Install",
+		"Build",
+		"Azure Pipelines",
+		"Azure DevOps Extensions"
+	],
 	"targets": [
 		{
 			"id": "Microsoft.VisualStudio.Services"
 		}
 	],
 	"categories": [
-		"Build and release"
+		"Azure Pipelines"
 	],
 	"icons": {
 		"default": "logo.png"
@@ -21,10 +31,10 @@
 			"path": "overview.md"
 		}
 	},
-  "repository": {
-	"type": "git",
-	"uri": "https://github.com/unoplatform/nuget.updater"
-  },
+	"repository": {
+		"type": "git",
+		"uri": "https://github.com/unoplatform/nuget.updater"
+	},
 	"contributions": [
 		{
 			"id": "unoplatform.canaryUpdater",
@@ -37,9 +47,7 @@
 			}
 		}
 	],
-	"scopes": [
-		"vso.work"
-	],
+	"scopes": [],
 	"files": [
 		{
 			"path": "canaryUpdater"

@@ -1,9 +1,9 @@
 {
-	"id": "95170664-b64e-4571-9cd4-936b3a626292",
-	"name": "nventiveCanaryUpdater",
+	"id": "32CDFE1A-1E67-47B5-9195-FEDBFC338DB9",
+	"name": "unoplatformCanaryUpdater",
 	"friendlyName": "Canary Updater",
 	"description": "A task to update a Canary build. The update is split in 3 phases :\n - Optional: merge of the canary branch with a given target branch (usually master) \n - Update of the NuGet packages; the versions used by the updater are calculated through the branch name (canaries/dev for dev, canaries/beta+dev for beta and stable, etc.); stable is always appended to the versions. \n - Optional: commit the changes and push the changes.",
-	"helpMarkDown": "[unoplatform](http://www.unoplatform.com/)",
+	"helpMarkDown": "[unoplatform](http://platform.uno/docs)",
 	"category": "Build",
 	"author": "unoplatform",
 	"version": {
@@ -210,7 +210,7 @@
 			"type": "string",
 			"label": "NuGet Updater version",
 			"groupName": "updater",
-			"defaultValue": "2.1.1",
+			"defaultValue": "1.0.0",
 			"required": true,
 			"helpMarkDown": "The of the NuGet updater to use. See https://www.nuget.org/packages/unoplatform.nuget.updater.tool for the list of available versions",
 			"properties": {
