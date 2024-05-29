@@ -110,6 +110,15 @@ jobs:
       working-directory: extensions/azuredevops
       run: .\node_modules\.bin\tsc -project .\tsconfig.json --listEmittedFiles --locale en-US --isolatedModules
 
+    - name: Update Versions
+      run: |
+        # update the version from the task manifest task.json file so that it matches steps.gitversion.outputs.MajorMinorPatch
+        $taskManifest = Get-Content -Path .\extensions\azuredevops\canaryUpdater\task.json -Raw | ConvertFrom-Json
+        $taskManifest.version.Major = "${{ steps.gitversion.outputs.Major }}"
+        $taskManifest.version.Minor = "${{ steps.gitversion.outputs.Minor }}"
+        $taskManifest.version.Patch = "${{ steps.gitversion.outputs.Patch }}"
+        $taskManifest | ConvertTo-Json -Depth 100 | Set-Content -Path .\extensions\azuredevops\canaryUpdater\task.json
+
     - name: Package Extension
       working-directory: extensions/azuredevops
       run: tfx extension create --json --no-color --output-path .\artifacts\Build.Tasks.${{ steps.gitversion.outputs.MajorMinorPatch }}.vsix --override "{""version"":""${{ steps.gitversion.outputs.MajorMinorPatch }}""}"
