@@ -111,9 +111,12 @@ namespace NvGet.Extensions
 
 				var packageName = string.Concat(nameParts).ToLowerInvariant();
 
-				if(NuGetVersion.TryParse(versionProperty.InnerText, out var nugetVersion))
+				if(!string.IsNullOrWhiteSpace(packageName))
 				{
-					references.Add(CreatePackageIdentity(packageName, versionProperty.InnerText));
+					if(NuGetVersion.TryParse(versionProperty.InnerText, out var nugetVersion))
+					{
+						references.Add(CreatePackageIdentity(packageName, versionProperty.InnerText));
+					}
 				}
 			}
 
