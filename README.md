@@ -3,6 +3,8 @@
 NuGet packages manipulations made easy.
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
+- Uno.NuGet.Updater: [![Uno.NuGet.Updater Stable](https://img.shields.io/nuget/v/Uno.NuGet.Updater?label=stable)](https://www.nuget.org/packages/Uno.NuGet.Updater)
+- Uno.NuGet.Updater.Tool: [![Uno.NuGet.Updater.Tool Stable](https://img.shields.io/nuget/v/Uno.NuGet.Updater.Tool?label=stable)](https://www.nuget.org/packages/Uno.NuGet.Updater.Tool) 
 
 ## NuGet.Updater
 
