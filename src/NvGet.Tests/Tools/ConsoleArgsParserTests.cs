@@ -158,7 +158,6 @@ namespace NvGet.Tests.Tools
 		}
 
 		[TestMethod]
-		[DeploymentItem(PinnedVersionJsonPath)]
 		public void Given_UpdaterParametersArgument_ContextTargetVersionIsSet()
 		{
 			var arguments = new[] { $"--versionOverrides={PinnedVersionJsonPath}" };

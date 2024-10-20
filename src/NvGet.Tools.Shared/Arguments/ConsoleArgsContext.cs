@@ -102,7 +102,7 @@ namespace NvGet.Tools.Arguments
 
 		public void WriteOptionDescriptions(TextWriter writer) => CreateOptionsFor(default).WriteOptionDescriptions(writer);
 
-		internal static Dictionary<string, (bool, VersionRange)> LoadOverrides(string inputPathOrUrl)
+		internal static Dictionary<string, (bool, UpgradePolicy, VersionRange)> LoadOverrides(string inputPathOrUrl)
 		{
 			var results =
 				LoadFromStreamAsync()
@@ -112,14 +112,14 @@ namespace NvGet.Tools.Arguments
 			return results.ToDictionary(
 				r => r.PackageId,
 				r => NuGetVersion.TryParse(r.UpdatedVersion, out var version) ?
-					(true, new VersionRange(
+					(true, r.UpgradePolicy, new VersionRange(
 						minVersion: version,
 						includeMinVersion: true,
 						maxVersion: version,
 						includeMaxVersion: true,
 						floatRange: null,
 						originalString: null)) :
-							(false, VersionRange.Parse(r.UpdatedVersion)));
+							(false, r.UpgradePolicy, VersionRange.Parse(r.UpdatedVersion)));
 
 			async Task<IEnumerable<UpdateResult>> LoadFromStreamAsync()
 			{

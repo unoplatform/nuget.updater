@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using NuGet.Versioning;
 using NvGet.Contracts;
 using NvGet.Entities;
 using NvGet.Extensions;
@@ -107,15 +108,43 @@ namespace NvGet.Tools.Updater.Extensions
 
 			var versionsPerTarget = availableVersions
 				.SelectMany(x => x)
-				.Where(v => manualVersion.range?.Satisfies(v.Version) ?? true)
+				.Where(v => manualVersion
+					.range?.Satisfies(v.Version) ?? true)
+				.Where(v => IsUpgradable(manualVersion.upgradePolicy, reference, v.Version))
 				.OrderByDescending(v => v)
-				.GroupBy(version => parameters.TargetVersions.FirstOrDefault(t => version.IsMatchingVersion(t, parameters.Strict)))
+				.GroupBy(version => parameters
+					.TargetVersions
+					.FirstOrDefault(
+						t => version.IsMatchingVersion(t, parameters.Strict)))
 				.Where(g => g.Key.HasValue());
 
 			return versionsPerTarget
 				.Select(g => g.FirstOrDefault())
 				.OrderByDescending(v => v.Version)
 				.FirstOrDefault();
+		}
+
+		private static bool IsUpgradable(
+			UpgradePolicy upgradePolicy
+			, PackageReference reference
+			, NuGetVersion version)
+		{
+			if (upgradePolicy == UpgradePolicy.Major)
+			{
+				return true;
+			}
+			else if(upgradePolicy == UpgradePolicy.Minor)
+			{
+				return version.Version < new Version(reference.Identity.Version.Major + 1, 0, 0);
+			}
+			else if(upgradePolicy == UpgradePolicy.Patch)
+			{
+				return version.Version < new Version(reference.Identity.Version.Major, reference.Identity.Version.Minor + 1, 0);
+			}
+			else
+			{
+				throw new NotSupportedException($"Upgrade policy {upgradePolicy} is not supported");
+			}
 		}
 	}
 }

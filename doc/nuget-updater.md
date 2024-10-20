@@ -76,6 +76,18 @@ versions.json example:
   {
     "PackageId": "Uno.Wasm.Bootstrap",
     "UpdatedVersion": "(,1.2.0-dev.18]" -> Resolves 1.2.0-dev.18 (-v=dev + -v=stable), 1.0.10 (-v=stable)
+  },
+  {
+    "PackageId": "Uno.WinUI",
+    "UpgradePolicy": "Minor" -> Only upgrades when a minor version of the same major is available
+  },
+  {
+    "PackageId": "Uno.Core",
+    "UpgradePolicy": "Major" -> Always upgrades
+  },
+  {
+    "PackageId": "Uno.Core.Extensions",
+    "UpgradePolicy": "Patch" -> Only upgrades when a patch version of the same major,minor is available
   }
 ]
 ```

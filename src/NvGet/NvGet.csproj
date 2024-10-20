@@ -1,9 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<TargetFrameworks>netstandard20;net472</TargetFrameworks>
+		<TargetFrameworks>net8.0</TargetFrameworks>
 		<NoWarn>$(NoWarn);CA1068;NU1701</NoWarn>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-		<LangVersion>9.0</LangVersion>
 	</PropertyGroup>
 
 	<!-- NuGet metadata -->
@@ -18,7 +17,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="System.Security.Cryptography.ProtectedData" Version="5.0.0" />
-		<PackageReference Include="Uno.Core" Version="2.0.0" />
+		<PackageReference Include="Uno.Core" Version="4.1.1" />
 		<PackageReference Include="NuGet.Protocol" Version="6.0.5" />
 		<PackageReference Include="System.ValueTuple" Version="4.5.0" />
 	</ItemGroup>

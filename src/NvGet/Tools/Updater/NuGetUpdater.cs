@@ -11,7 +11,6 @@ using NvGet.Helpers;
 using NvGet.Tools.Updater.Entities;
 using NvGet.Tools.Updater.Extensions;
 using NvGet.Tools.Updater.Log;
-using Uno.Extensions;
 
 #if WINDOWS_UWP
 using XmlDocument = Windows.Data.Xml.Dom.XmlDocument;
@@ -71,7 +70,7 @@ namespace NvGet.Tools.Updater
 				{
 					var targetVersionText = string.Join(" or ", _parameters.TargetVersions);
 
-					if(targetVersionText.HasValue())
+					if(!string.IsNullOrWhiteSpace(targetVersionText))
 					{
 						targetVersionText += " ";
 					}
