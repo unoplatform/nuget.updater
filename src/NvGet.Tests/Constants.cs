@@ -16,5 +16,12 @@ namespace NvGet.Tests
 		};
 
 		public static readonly TestPackageFeed TestFeed = new TestPackageFeed(TestFeedUri, TestPackages);
+
+		public static readonly Dictionary<string, string[]> TestPackages2 = new Dictionary<string, string[]>
+		{
+			{"Uno.UI", new[] { "2.1.39", "2.2.0", "2.2.1", "2.3.0" } },
+		};
+
+		public static readonly TestPackageFeed TestFeed2 = new TestPackageFeed(TestFeedUri, TestPackages2);
 	}
 }

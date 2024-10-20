@@ -112,6 +112,26 @@ namespace NvGet.Tests.Tools.Updater
 		}
 
 		[TestMethod]
+		public async Task GivenRangeOverrides_KeepPatch()
+		{
+			var reference = new PackageReference("Uno.UI", "2.2.0");
+
+			var parameters = new UpdaterParameters
+			{
+				TargetVersions = { "dev", "stable" },
+				Feeds = { Constants.TestFeed2 },
+				VersionOverrides =
+				{
+					{ reference.Identity.Id, (false, UpgradePolicy.Patch, VersionRange.Parse("0.0.0.0")) },
+				},
+			};
+
+			var version = await parameters.GetLatestVersion(CancellationToken.None, reference);
+
+			Assert.AreEqual(NuGetVersion.Parse("2.2.1"), version.Version);
+		}
+
+		[TestMethod]
 		public async Task GivenRangeOverrides_CorrectVersionsAreResolved_AndTargetVersionIsHonored()
 		{
 			var reference = new PackageReference("Uno.UI", "2.1.39");
