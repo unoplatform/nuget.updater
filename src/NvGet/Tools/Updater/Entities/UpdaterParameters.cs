@@ -58,7 +58,7 @@ namespace NvGet.Tools.Updater.Entities
 		/// <summary>
 		/// Gets the version range overrides for specific packages.
 		/// </summary>
-		public IDictionary<string, (bool forceVersion, VersionRange range)> VersionOverrides { get; } = new Dictionary<string, (bool, VersionRange)>();
+		public IDictionary<string, (bool forceVersion, UpgradePolicy upgradePolicy, VersionRange range)> VersionOverrides { get; } = new Dictionary<string, (bool, UpgradePolicy, VersionRange)>();
 
 		/// <summary>
 		/// Gets the csproj properties that should be updated for corresponding package.

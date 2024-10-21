@@ -60,7 +60,7 @@ namespace NvGet.Extensions
 			}
 			else
 			{
-				return $"{string.Join(", ", EnumerableExtensions.SkipLast(values, 1))} and {values.Last()}";
+				return $"{string.Join(", ", values.SkipLast(1))} and {values.Last()}";
 			}
 		}
 	}

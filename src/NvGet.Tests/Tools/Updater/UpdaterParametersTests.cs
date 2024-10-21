@@ -56,7 +56,7 @@ namespace NvGet.Tests.Tools.Updater
 
 			var version = await parameters.GetLatestVersion(CancellationToken.None, reference);
 
-			Assert.AreEqual(NuGetVersion.Parse("2.3.0-dev.58"), version.Version);
+			Assert.AreEqual(NuGetVersion.Parse("3.0.0-dev.2"), version.Version);
 		}
 
 		[TestMethod]
@@ -70,7 +70,7 @@ namespace NvGet.Tests.Tools.Updater
 				Feeds = { Constants.TestFeed },
 				VersionOverrides =
 				{
-					{ reference.Identity.Id, (false, VersionRange.Parse("(,2.3.0-dev.48]")) },
+					{ reference.Identity.Id, (false, UpgradePolicy.Major, VersionRange.Parse("(,2.3.0-dev.48]")) },
 				},
 			};
 
@@ -78,11 +78,57 @@ namespace NvGet.Tests.Tools.Updater
 
 			Assert.AreEqual(NuGetVersion.Parse("2.3.0-dev.48"), version.Version);
 
-			parameters.VersionOverrides["Uno.UI"] = (false, VersionRange.Parse("(,2.3.0-dev.48)"));
+			parameters.VersionOverrides["Uno.UI"] = (false, UpgradePolicy.Major, VersionRange.Parse("(,2.3.0-dev.48)"));
 
 			version = await parameters.GetLatestVersion(CancellationToken.None, reference);
 
 			Assert.AreEqual(NuGetVersion.Parse("2.3.0-dev.44"), version.Version);
+		}
+
+		[TestMethod]
+		public async Task GivenRangeOverrides_KeepMinor()
+		{
+			var reference = new PackageReference("Uno.UI", "2.1.39");
+
+			var parameters = new UpdaterParameters
+			{
+				TargetVersions = { "dev", "stable" },
+				Feeds = { Constants.TestFeed },
+				VersionOverrides =
+				{
+					{ reference.Identity.Id, (false, UpgradePolicy.Minor, VersionRange.Parse("0.0.0.0")) },
+				},
+			};
+
+			var version = await parameters.GetLatestVersion(CancellationToken.None, reference);
+
+			Assert.AreEqual(NuGetVersion.Parse("2.3.0-dev.58"), version.Version);
+
+			parameters.VersionOverrides["Uno.UI"] = (false, UpgradePolicy.Minor, VersionRange.Parse("(,2.3.0-dev.48)"));
+
+			version = await parameters.GetLatestVersion(CancellationToken.None, reference);
+
+			Assert.AreEqual(NuGetVersion.Parse("2.3.0-dev.44"), version.Version);
+		}
+
+		[TestMethod]
+		public async Task GivenRangeOverrides_KeepPatch()
+		{
+			var reference = new PackageReference("Uno.UI", "2.2.0");
+
+			var parameters = new UpdaterParameters
+			{
+				TargetVersions = { "dev", "stable" },
+				Feeds = { Constants.TestFeed2 },
+				VersionOverrides =
+				{
+					{ reference.Identity.Id, (false, UpgradePolicy.Patch, VersionRange.Parse("0.0.0.0")) },
+				},
+			};
+
+			var version = await parameters.GetLatestVersion(CancellationToken.None, reference);
+
+			Assert.AreEqual(NuGetVersion.Parse("2.2.1"), version.Version);
 		}
 
 		[TestMethod]
@@ -96,7 +142,7 @@ namespace NvGet.Tests.Tools.Updater
 				Feeds = { Constants.TestFeed },
 				VersionOverrides =
 				{
-					{ reference.Identity.Id, (false, VersionRange.Parse("(,2.3.0-dev.48]")) },
+					{ reference.Identity.Id, (false, UpgradePolicy.Major, VersionRange.Parse("(,2.3.0-dev.48]")) },
 				},
 			};
 

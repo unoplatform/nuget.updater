@@ -60,7 +60,7 @@ namespace NvGet.Tests
 				Feeds = { Constants.TestFeed },
 				VersionOverrides =
 				{
-					{ reference.Identity.Id, (true, new VersionRange(reference.Identity.Version, true, reference.Identity.Version, true)) },
+					{ reference.Identity.Id, (true, UpgradePolicy.Major, new VersionRange(reference.Identity.Version, true, reference.Identity.Version, true)) },
 				},
 			};
 

@@ -30,29 +30,5 @@ namespace NvGet.Extensions
 				dictionary.Add(key, update(default));
 			}
 		}
-
-#if !WINDOWS_UWP
-		public static bool TryAdd<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key, TValue value)
-		{
-			if(dictionary.ContainsKey(key))
-			{
-				return false;
-			}
-
-			dictionary.Add(key, value);
-
-			return true;
-		}
-
-		public static TValue GetValueOrDefault<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key)
-		{
-			if(dictionary.ContainsKey(key))
-			{
-				return dictionary[key];
-			}
-
-			return default;
-		}
-#endif
 	}
 }
