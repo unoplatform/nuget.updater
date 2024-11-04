@@ -133,11 +133,11 @@ namespace NvGet.Tools.Updater.Extensions
 			{
 				return true;
 			}
-			else if(upgradePolicy == UpgradePolicy.Minor)
+			else if (upgradePolicy == UpgradePolicy.Minor)
 			{
 				return version.Version < new Version(reference.Identity.Version.Major + 1, 0, 0);
 			}
-			else if(upgradePolicy == UpgradePolicy.Patch)
+			else if (upgradePolicy == UpgradePolicy.Patch)
 			{
 				return version.Version < new Version(reference.Identity.Version.Major, reference.Identity.Version.Minor + 1, 0);
 			}

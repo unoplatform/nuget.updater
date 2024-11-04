@@ -119,7 +119,7 @@ namespace NvGet.Tools.Arguments
 						includeMaxVersion: true,
 						floatRange: null,
 						originalString: null)) :
-							(false, r.UpgradePolicy, VersionRange.Parse(r.UpdatedVersion)));
+							(false, r.UpgradePolicy, VersionRange.Parse(r.UpdatedVersion ?? "0.0.0.0")));
 
 			async Task<IEnumerable<UpdateResult>> LoadFromStreamAsync()
 			{
