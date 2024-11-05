@@ -22,8 +22,8 @@ namespace NvGet.Tools.Arguments
 		public string Message => Type switch
 		{
 			ConsoleArgErrorType.UnrecognizedArgument => "unrecognized argument: " + Argument,
-			ConsoleArgErrorType.ValueAssignmentError => "error while trying to assign value: " + Argument,
-			ConsoleArgErrorType.ValueParsingError => "error while trying to parse value: " + Argument,
+			ConsoleArgErrorType.ValueAssignmentError => $"error while trying to assign value: {Argument} (Exception: {Exception?.Message ?? "None"})",
+			ConsoleArgErrorType.ValueParsingError => $"error while trying to parse value: {Argument} (Exception: {Exception?.Message ?? "None"})",
 
 			_ => $"{Type}: " + Argument,
 		};
