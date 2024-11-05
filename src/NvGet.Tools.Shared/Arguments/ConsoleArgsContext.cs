@@ -136,7 +136,9 @@ namespace NvGet.Tools.Arguments
 				}
 				else
 				{
-					using(var jsonTextReader = new JsonTextReader(File.OpenText(inputPathOrUrl)))
+					var alignedInputPathOrUrl = inputPathOrUrl.Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
+
+					using(var jsonTextReader = new JsonTextReader(File.OpenText(alignedInputPathOrUrl)))
 					{
 						return jsonSerializer.Deserialize<IEnumerable<UpdateResult>>(jsonTextReader);
 					}
