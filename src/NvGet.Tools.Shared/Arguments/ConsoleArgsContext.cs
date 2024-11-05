@@ -136,7 +136,7 @@ namespace NvGet.Tools.Arguments
 				}
 				else
 				{
-					var alignedInputPathOrUrl = inputPathOrUrl.Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
+					var alignedInputPathOrUrl = inputPathOrUrl.Replace(Path.DirectorySeparatorChar == '/' ? '\\' : '/', Path.DirectorySeparatorChar);
 
 					using(var jsonTextReader = new JsonTextReader(File.OpenText(alignedInputPathOrUrl)))
 					{
