@@ -8,6 +8,8 @@ using NuGet.Versioning;
 using NvGet.Extensions;
 using NvGet.Tools.Updater.Log;
 using Uno.Extensions;
+using Uno.Extensions.Specialized;
+
 
 #if WINDOWS_UWP
 using XmlDocument = Windows.Data.Xml.Dom.XmlDocument;
@@ -98,7 +100,10 @@ namespace NvGet.Tools.Updater.Extensions
 
 			var propertyGroupVersionReferences = document
 				.SelectElements("PropertyGroup")
-				.SelectMany(pg => pg.SelectNodes(packageId.Replace(".", "") + "Version").OfType<XmlElement>());
+				.SelectMany(pg => pg
+					.SelectNodes("*")
+					.OfType<XmlElement>()
+					.Where(n => string.Equals(n.Name, packageId.Replace(".", string.Empty) + "Version", StringComparison.OrdinalIgnoreCase)));
 
 			foreach(var versionProperty in propertyGroupVersionReferences)
 			{
@@ -110,6 +115,8 @@ namespace NvGet.Tools.Updater.Extensions
 					{
 						versionProperty.InnerText = currentOperation.UpdatedVersion.ToString();
 					}
+
+					operations.Add(currentOperation);
 				}
 			}
 
