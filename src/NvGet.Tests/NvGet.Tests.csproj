@@ -6,6 +6,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Scenarios\Given_VersionPropertyUpdate\Directory.Packages.props" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Scenarios\Given_VersionPropertyUpdate\Directory.Packages.props">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="..\..\.editorconfig" Link=".editorconfig" />
   </ItemGroup>
 
