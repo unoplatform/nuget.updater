@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Xml;
-using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using NuGet.Versioning;
 using NvGet.Extensions;
-using NvGet.Helpers;
 using NvGet.Tools.Updater.Log;
 using Uno.Extensions;
 
@@ -192,18 +192,26 @@ namespace NvGet.Tools.Updater.Extensions
 			{
 				var operations = new List<UpdateOperation>();
 
-				var globalJson = JsonConvert.DeserializeObject<GlobalJson>(jsonDocReference.Contents);
+				var globalJson = JObject.Parse(jsonDocReference.Contents);
 
-				if(globalJson.MSBuildSdks.TryGetValue(operation.PackageId, out var value))
+				if(globalJson["msbuild-sdks"] is JObject msbuildSdks)
 				{
-					globalJson.MSBuildSdks[operation.PackageId] = operation.UpdatedVersion.ToString();
+					if(msbuildSdks.TryGetValue(operation.PackageId, out var value))
+					{
+						var currentOperation = operation.WithPreviousVersion(value.ToString());
 
-					var currentOperation = operation.WithPreviousVersion(value);
+						if(currentOperation.ShouldProceed())
+						{
+							// Use text replace to avoid changing the formatting of the file.
 
-					operations.Add(currentOperation);
+							var pattern = $"\"{operation.PackageId}\"\\s*:\\s*\"[^\"]*\"";
+							var replacement = $"\"{operation.PackageId}\": \"{operation.UpdatedVersion}\"";
+							jsonDocReference.Contents = Regex.Replace(jsonDocReference.Contents, pattern, replacement);
+						}
+
+						operations.Add(currentOperation);
+					}
 				}
-
-				jsonDocReference.Contents = JsonConvert.SerializeObject(globalJson);
 
 				return operations;
 			}
