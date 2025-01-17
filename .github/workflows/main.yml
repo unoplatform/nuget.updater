@@ -16,9 +16,6 @@ concurrency:
   group: ${{github.workflow}} - ${{github.ref}}
   cancel-in-progress: true
 
-env:
-  GitVersion_Version: '5.6.x'
-
 jobs:
   build-tools:
     name: Build Tools
@@ -29,32 +26,16 @@ jobs:
       with:
         fetch-depth: 0
     
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v1
+    - uses: dotnet/nbgv@f088059084cb5d872e9d1a994433ca6440c2bf72 # v0.4.2
+      id: nbgv
       with:
-        dotnet-version: '5.0.x'
-    
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: '8.0.100'
-
-    - name: Setup GitVersion
-      uses: gittools/actions/gitversion/setup@v0.9.9
-      with:
-        versionSpec: ${{ env.GitVersion_Version }}
-
-    - name: GitVersion
-      id: gitversion
-      uses: gittools/actions/gitversion/execute@v0.9.9
-      with:
-        useConfigFile: true
-        configFilePath: gitversion.yml
+        toolVersion: 3.6.139
+        setAllVars: true
 
     - name: Build - CI
       run: |
-        $adjustedPackageVersion="${{ steps.gitversion.outputs.semVer }}".ToLower();
-        dotnet build src/NvGet.sln /p:PackageVersion=$adjustedPackageVersion /p:Version=${{ steps.gitversion.outputs.assemblySemVer }} "/p:PackageOutputPath=$env:GITHUB_WORKSPACE\artifacts" /p:GeneratePackageOnBuild=true
+        $adjustedPackageVersion="${{ steps.nbgv.outputs.SemVer2 }}".ToLower();
+        dotnet build src/NvGet.sln /p:PackageVersion=$adjustedPackageVersion /p:Version=${{ steps.nbgv.outputs.AssemblyVersion }} "/p:PackageOutputPath=$env:GITHUB_WORKSPACE\artifacts" /p:GeneratePackageOnBuild=true
 
     - name: Run Unit Tests
       run: |
@@ -75,28 +56,17 @@ jobs:
       uses: actions/checkout@v2
       with:
         fetch-depth: 0
-    
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: '5.0.x'
 
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: '8.0.300'
 
-    - name: Setup GitVersion
-      uses: gittools/actions/gitversion/setup@v0.9.9
+    - uses: dotnet/nbgv@f088059084cb5d872e9d1a994433ca6440c2bf72 # v0.4.2
+      id: nbgv
       with:
-        versionSpec: ${{ env.GitVersion_Version }}
-
-    - name: GitVersion
-      id: gitversion
-      uses: gittools/actions/gitversion/execute@v0.9.9
-      with:
-        useConfigFile: true
-        configFilePath: gitversion.yml
+        toolVersion: 3.6.139
+        setAllVars: true
 
     - name: Install tfx
       working-directory: extensions/azuredevops
@@ -112,16 +82,15 @@ jobs:
 
     - name: Update Versions
       run: |
-        # update the version from the task manifest task.json file so that it matches steps.gitversion.outputs.MajorMinorPatch
         $taskManifest = Get-Content -Path .\extensions\azuredevops\canaryUpdater\task.json -Raw | ConvertFrom-Json
-        $taskManifest.version.Major = "${{ steps.gitversion.outputs.Major }}"
-        $taskManifest.version.Minor = "${{ steps.gitversion.outputs.Minor }}"
-        $taskManifest.version.Patch = "${{ steps.gitversion.outputs.Patch }}"
+        $taskManifest.version.Major = "${{ steps.nbgv.outputs.VersionMajor }}"
+        $taskManifest.version.Minor = "${{ steps.nbgv.outputs.VersionMinor }}"
+        $taskManifest.version.Patch = "${{ steps.nbgv.outputs.BuildNumber }}"
         $taskManifest | ConvertTo-Json -Depth 100 | Set-Content -Path .\extensions\azuredevops\canaryUpdater\task.json
 
     - name: Package Extension
       working-directory: extensions/azuredevops
-      run: tfx extension create --json --no-color --output-path .\artifacts\Build.Tasks.${{ steps.gitversion.outputs.MajorMinorPatch }}.vsix --override "{""version"":""${{ steps.gitversion.outputs.MajorMinorPatch }}""}"
+      run: tfx extension create --json --no-color --output-path .\artifacts\Build.Tasks.${{ steps.nbgv.outputs.SemVer2 }}.vsix --override "{""version"":""${{ steps.nbgv.outputs.SemVer2 }}""}"
 
     - name: Upload Artifacts
       uses: actions/upload-artifact@v4
