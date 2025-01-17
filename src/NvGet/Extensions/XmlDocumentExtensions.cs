@@ -204,7 +204,14 @@ namespace NvGet.Extensions
 				PreserveWhitespace = true,
 			};
 
-			document.Load(path);
+			try
+			{
+				document.Load(path);
+			}
+			catch(Exception e)
+			{
+				throw new Exception($"Failed to parse file {path}", e);
+			}
 #endif
 
 			return document;
