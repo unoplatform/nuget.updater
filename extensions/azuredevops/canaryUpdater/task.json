@@ -397,15 +397,15 @@
   ],
   "execution": {
     "Node10": {
-      "target": "bash10.js",
+      "target": "task.js",
       "argumentFormat": ""
     },
     "Node16": {
-      "target": "bash16.js",
+      "target": "task.js",
       "argumentFormat": ""
     },
     "Node20_1": {
-      "target": "bash20.js",
+      "target": "task.js",
       "argumentFormat": ""
     }
   }
