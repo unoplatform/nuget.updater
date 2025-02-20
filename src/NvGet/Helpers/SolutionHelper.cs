@@ -24,6 +24,7 @@ namespace NvGet.Helpers
 		public static async Task<PackageReference[]> GetPackageReferences(
 			CancellationToken ct,
 			string solutionPath,
+			ICollection<string> pathExclusions,
 			FileType fileType,
 			ILogger log,
 			ICollection<(string PropertyName, string PackageId)>? updateProperties = default
@@ -37,7 +38,7 @@ namespace NvGet.Helpers
 
 			if(fileType.HasFlag(FileType.Csproj))
 			{
-				foreach(var f in await GetProjectFiles(ct, solutionPath, log))
+				foreach(var f in await GetProjectFiles(ct, solutionPath, pathExclusions, log))
 				{
 					packages.AddRange(await GetFileReferences(ct, f, FileType.Csproj, updateProperties));
 				}
@@ -47,7 +48,7 @@ namespace NvGet.Helpers
 			{
 				const FileType currentTarget = FileType.DirectoryProps;
 
-				foreach(var file in await GetDirectoryFiles(ct, solutionPath, currentTarget, log))
+				foreach(var file in await GetDirectoryFiles(ct, solutionPath, pathExclusions, currentTarget, log))
 				{
 					packages.AddRange(await GetFileReferences(ct, file, currentTarget, updateProperties));
 				}
@@ -57,7 +58,7 @@ namespace NvGet.Helpers
 			{
 				const FileType currentTarget = FileType.DirectoryTargets;
 
-				foreach(var file in await GetDirectoryFiles(ct, solutionPath, currentTarget, log))
+				foreach(var file in await GetDirectoryFiles(ct, solutionPath, pathExclusions, currentTarget, log))
 				{
 					packages.AddRange(await GetFileReferences(ct, file, currentTarget, updateProperties));
 				}
@@ -67,7 +68,7 @@ namespace NvGet.Helpers
 			{
 				const FileType currentTarget = FileType.CentralPackageManagement;
 
-				foreach(var file in await GetDirectoryFiles(ct, solutionPath, currentTarget, log))
+				foreach(var file in await GetDirectoryFiles(ct, solutionPath, pathExclusions, currentTarget, log))
 				{
 					packages.AddRange(await GetFileReferences(ct, file, currentTarget, updateProperties));
 				}
@@ -77,7 +78,7 @@ namespace NvGet.Helpers
 			{
 				const FileType currentTarget = FileType.GlobalJson;
 
-				foreach(var file in await GetDirectoryFiles(ct, solutionPath, currentTarget, log))
+				foreach(var file in await GetDirectoryFiles(ct, solutionPath, pathExclusions, currentTarget, log))
 				{
 					packages.AddRange(await GetGlobalJsonFileReferences(ct, file, currentTarget, updateProperties));
 				}
@@ -85,7 +86,7 @@ namespace NvGet.Helpers
 
 			if(fileType.HasFlag(FileType.Nuspec))
 			{
-				foreach(var f in await GetNuspecFiles(ct, solutionPath, log))
+				foreach(var f in await GetNuspecFiles(ct, solutionPath, pathExclusions, log))
 				{
 					packages.AddRange(await GetFileReferences(ct, f, FileType.Nuspec, updateProperties));
 				}
@@ -100,7 +101,7 @@ namespace NvGet.Helpers
 				.ToArray();
 		}
 
-		private static async Task<string[]> GetProjectFiles(CancellationToken ct, string solutionPath, ILogger log)
+		private static async Task<string[]> GetProjectFiles(CancellationToken ct, string solutionPath, ICollection<string> excludedPaths, ILogger log)
 		{
 			var files = Array.Empty<string>();
 
@@ -120,6 +121,10 @@ namespace NvGet.Helpers
 					.ToArray();
 			}
 
+			files = files
+				.Where(f => !excludedPaths.Any(p => f.Contains(p, StringComparison.OrdinalIgnoreCase)))
+				.ToArray();
+
 			log.LogInformation($"Found {files.Length} csproj files");
 
 			return files;
@@ -127,7 +132,7 @@ namespace NvGet.Helpers
 
 		//To improve: https://docs.microsoft.com/en-us/visualstudio/msbuild/customize-your-build?view=vs-2019#search-scope
 		//The file should be looked for at all levels
-		private static async Task<string[]> GetDirectoryFiles(CancellationToken ct, string solutionPath, FileType target, ILogger log)
+		private static async Task<string[]> GetDirectoryFiles(CancellationToken ct, string solutionPath, ICollection<string> pathExclusions, FileType target, ILogger log)
 		{
 			string file;
 
@@ -135,7 +140,9 @@ namespace NvGet.Helpers
 			{
 				var matchingFiles = await FileHelper.GetFiles(ct, solutionPath, nameFilter: target.GetDescription());
 
-				return matchingFiles.ToArray();
+				return matchingFiles
+					.Where(f => !pathExclusions.Any(p => f.Contains(p, StringComparison.OrdinalIgnoreCase)))
+					.ToArray();
 			}
 			else
 			{
@@ -144,7 +151,9 @@ namespace NvGet.Helpers
 				if(target is FileType.DirectoryProps or FileType.DirectoryTargets or FileType.GlobalJson or FileType.CentralPackageManagement)
 				{
 					var matchingFiles = await FileHelper.GetFiles(ct, solutionFolder, nameFilter: target.GetDescription());
-					return matchingFiles.ToArray();
+					return matchingFiles
+						.Where(f => !pathExclusions.Any(p => f.Contains(p, StringComparison.OrdinalIgnoreCase)))
+						.ToArray();
 				}
 				else
 				{
@@ -155,13 +164,17 @@ namespace NvGet.Helpers
 			if(file.HasValue() && await FileHelper.Exists(file))
 			{
 				log.LogInformation($"Found {target.GetDescription()}");
-				return new[] { file };
+
+				if(!pathExclusions.Where(p => file.Contains(p, StringComparison.OrdinalIgnoreCase)).Any())
+				{
+					return [file];
+				}
 			}
 
 			return Array.Empty<string>();
 		}
 
-		private static async Task<string[]> GetNuspecFiles(CancellationToken ct, string solutionPath, ILogger log)
+		private static async Task<string[]> GetNuspecFiles(CancellationToken ct, string solutionPath, ICollection<string> pathExclusions, ILogger log)
 		{
 			string solutionFolder;
 
@@ -177,7 +190,10 @@ namespace NvGet.Helpers
 			var files = await FileHelper.GetFiles(ct, solutionFolder, extensionFilter: ".nuspec");
 
 			//Nuspec files are generated in obj when using the new csproj format
-			files = files.Where(f => !f.Contains(Path.DirectorySeparatorChar + "obj" + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase)).ToArray();
+			files = files
+				.Where(f => !f.Contains(Path.DirectorySeparatorChar + "obj" + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase))
+				.Where(f => !pathExclusions.Any(p => f.Contains(p, StringComparison.OrdinalIgnoreCase)))
+				.ToArray();
 
 			log.LogInformation($"Found {files.Length} nuspec files");
 
