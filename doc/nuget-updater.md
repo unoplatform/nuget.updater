@@ -111,6 +111,11 @@ properties.json example:
 ```
 In this case the `UnoVersion` property will be updated to the latest version of `Uno.UI` found in the solution.
 
+- Exclude paths from the updater:
+```
+nugetupdater -x "sub_path1" -x "sub_path2"
+```
+
 ## Supported types of updates
 
 The nuget updater supports updating:
