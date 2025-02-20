@@ -48,7 +48,7 @@ namespace NvGet.Tools.Arguments
 				{ "outputFile=|of=", "The {path} to a markdown file where the update summary will be written", TrySet(x => context.SummaryFile = x) },
 				{ "allowDowngrade|d", "Whether package downgrade is allowed", TrySet(x => context.Parameters.IsDowngradeAllowed = true) },
 				{ "useNuGetorg|n", "Whether to use packages from NuGet.org", TrySet(_ => context.Parameters.Feeds.Add(PackageFeed.NuGetOrg)) },
-				{ "excludePath|x", "Excludes paths containing the provided value (case insensitive)", TrySet(p => context.Parameters.ExcludedPaths.Add(p)) },
+				{ "excludePath=|x=", "Excludes paths containing the provided value (case insensitive)", TrySet(p => context.Parameters.ExcludedPaths.Add(p)) },
 				{ "silent", "Suppress all output from NuGet Updater", TrySet(_ => context.IsSilent = true) },
 				{ "strict", "Whether to use versions with only the specified version tag (ie. dev, but not dev.test)", TrySet(_ => context.Parameters.Strict = true) },
 				{ "dryrun", "Runs the updater but doesn't write the updates to files.", TrySet(_ => context.Parameters.IsDryRun = true) },
