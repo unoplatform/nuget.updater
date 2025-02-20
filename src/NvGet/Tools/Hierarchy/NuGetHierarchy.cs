@@ -31,7 +31,7 @@ namespace NvGet.Tools.Hierarchy
 
 		public async Task<SolutionPackageHierarchy> RunAsync(CancellationToken ct)
 		{
-			var references = await SolutionHelper.GetPackageReferences(ct, _target, FileType.All, _log);
+			var references = await SolutionHelper.GetPackageReferences(ct, _target, [], FileType.All, _log);
 			var identities = new HashSet<PackageIdentity>(references.Select(r => r.Identity));
 
 			var hierarchy = await GetPackagesWithDependencies(ct, identities);

@@ -73,14 +73,43 @@ namespace NvGet.Tests.Tools
 			Assert.AreEqual(version, updates.First().UpdatedVersion.OriginalVersion);
 		}
 
+		[TestMethod]
+		public async Task Given_InvalidGlobalJson()
+		{
+			var testTempPath = CreateTempWorkspace(".\\Scenarios\\Given_InvalidGlobalJson");
+
+			var parameters = new UpdaterParameters
+			{
+				SolutionRoot = testTempPath,
+				UpdateTarget = FileType.All,
+				TargetVersions = { "stable" },
+				Feeds = { TestFeed },
+				ExcludedPaths = { "ignore_me" },
+			};
+
+			var logger = new UpdaterLogger(Console.Out);
+
+			var updater = new NuGetUpdater(parameters, logger);
+
+			await updater.UpdatePackages(CancellationToken.None);
+
+			var updates = logger.GetUpdates();
+			Assert.AreEqual(0, updates.Count());
+		}
+
 		private static string CreateTempWorkspace(string sourceFolder)
 		{
 			var tempFolder = Path.GetTempPath();
 			var testTempPath = Path.Combine(tempFolder, Guid.NewGuid().ToString());
 			Directory.CreateDirectory(testTempPath);
-			foreach(var files in Directory.GetFiles(sourceFolder, "*", SearchOption.AllDirectories))
+
+			foreach(var file in Directory.GetFiles(sourceFolder, "*", SearchOption.AllDirectories))
 			{
-				File.Copy(files, Path.Combine(testTempPath, Path.GetFileName(files)));
+				var relativePath = Path.GetRelativePath(sourceFolder, file);
+				var targetPath = Path.Combine(testTempPath, relativePath);
+				Directory.CreateDirectory(Path.GetDirectoryName(targetPath));
+
+				File.Copy(file, targetPath);
 			}
 
 			return testTempPath;

@@ -290,6 +290,18 @@
 			}
 		},
 		{
+	  "name": "excludedPaths",
+	  "type": "string",
+	  "label": "Excluded Paths",
+	  "groupName": "updater",
+	  "defaultValue": "",
+	  "required": false,
+	  "helpMarkDown": "Indicates exluded paths (separated by ';') when searching for files to update",
+	  "properties": {
+		"DisableManageLink": "True"
+	  }
+	},
+	{
 			"name": "additionalPublicSources",
 			"type": "multiline",
 			"label": "Additional Public Sources",

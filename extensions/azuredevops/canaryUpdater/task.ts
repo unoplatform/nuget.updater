@@ -235,6 +235,7 @@ async function nugetUpdate(): Promise<boolean> {
             .concat(targetVersions.map(v => "--version=" + v))
             .concat(getListArgument("ignorePackages", ";", "ignore"))
             .concat(getListArgument("updatePackages", ";", "update"))
+			.concat(getListArgument("excludedPaths", ";", "excludePath"))
             .concat(getListArgument("additionalPublicSources", "\n", "feed"))
             .filter(isNotNull)
             );
