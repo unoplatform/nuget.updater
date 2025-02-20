@@ -26,6 +26,11 @@ namespace NvGet.Tools.Updater.Entities
 		public ICollection<string> TargetVersions { get; } = new List<string>();
 
 		/// <summary>
+		/// Gets the paths to ignore when searching for updatable files.
+		/// </summary>
+		public ICollection<string> ExcludedPaths { get; } = new List<string>();
+
+		/// <summary>
 		/// Gets or sets a value indicating whether the version should exactly match the target version.
 		/// </summary>
 		public bool Strict { get; set; }

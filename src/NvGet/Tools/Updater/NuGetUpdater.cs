@@ -107,7 +107,7 @@ namespace NvGet.Tools.Updater
 		internal async Task<UpdaterPackage[]> GetPackages(CancellationToken ct)
 		{
 			var packages = new List<UpdaterPackage>();
-			var references = await SolutionHelper.GetPackageReferences(ct, _parameters.SolutionRoot, _parameters.UpdateTarget, _log, _parameters.UpdateProperties);
+			var references = await SolutionHelper.GetPackageReferences(ct, _parameters.SolutionRoot, _parameters.ExcludedPaths, _parameters.UpdateTarget, _log, _parameters.UpdateProperties);
 
 			_log.Write($"Found {references.Length} references");
 
