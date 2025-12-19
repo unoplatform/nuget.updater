@@ -71,6 +71,13 @@ namespace NvGet.Tools.Updater.Entities
 		public ICollection<(string PropertyName, string PackageId)> UpdateProperties { get; } = new List<(string PropertyNaem, string PackageId)>();
 
 		/// <summary>
+		/// Gets or sets property-to-package fallback mappings for properties that reference outdated base packages.
+		/// When a property (e.g., UnoExtensionsVersion) references a package with no matching versions,
+		/// these mappings provide alternative packages to check (e.g., Uno.Extensions.Core).
+		/// </summary>
+		public IDictionary<string, string> PropertyPackageFallbackMappings { get; } = new Dictionary<string, string>();
+
+		/// <summary>
 		/// Gets or sets a value indicating whether to actually write the updates to the files.
 		/// </summary>
 		public bool IsDryRun { get; set; }

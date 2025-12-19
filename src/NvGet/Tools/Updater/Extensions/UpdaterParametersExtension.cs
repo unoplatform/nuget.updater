@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using NuGet.Packaging.Core;
 using NuGet.Versioning;
 using NvGet.Contracts;
 using NvGet.Entities;
@@ -118,10 +119,95 @@ namespace NvGet.Tools.Updater.Extensions
 						t => version.IsMatchingVersion(t, parameters.Strict)))
 				.Where(g => g.Key.HasValue());
 
-			return versionsPerTarget
+			var result = versionsPerTarget
 				.Select(g => g.FirstOrDefault())
 				.OrderByDescending(v => v.Version)
 				.FirstOrDefault();
+
+			// Check for fallback package mappings if configured for this package
+			// (applies even when a version was found, as the base package may be outdated)
+			var fallbackResult = await TryGetFallbackVersion(parameters, ct, reference, authors, manualVersion);
+			
+			// Use fallback result if it's newer than the base package result
+			if (fallbackResult != null && (result == null || fallbackResult.Version > result.Version))
+			{
+				result = fallbackResult;
+			}
+
+			return result;
+		}
+
+		private static async Task<FeedVersion> TryGetFallbackVersion(
+			UpdaterParameters parameters,
+			CancellationToken ct,
+			PackageReference reference,
+			string[] authors,
+			(bool forceVersion, UpgradePolicy upgradePolicy, VersionRange range) manualVersion)
+		{
+			// Check user-provided custom mappings first
+			if (parameters.PropertyPackageFallbackMappings.TryGetValue(reference.Identity.Id, out var customFallbackId))
+			{
+				PackageFeed.Logger.LogInformation($"Using custom fallback mapping: {reference.Identity.Id} -> {customFallbackId}");
+				return await GetVersionForFallbackPackage(parameters, ct, reference, customFallbackId, authors, manualVersion);
+			}
+
+			// Check well-known mappings
+			// Convert package ID back to property name format (e.g., "uno.extensions" -> "UnoExtensions")
+			var propertyName = ConvertPackageIdToPropertyName(reference.Identity.Id);
+			
+			if (NvGet.Tools.Updater.Entities.PropertyPackageMappings.TryGetFallbackMapping(
+				propertyName, out var fallbackPackageId, out var reason))
+			{
+				PackageFeed.Logger.LogInformation($"Property fallback mapping: {reference.Identity.Id} -> {fallbackPackageId}. {reason}");
+				return await GetVersionForFallbackPackage(parameters, ct, reference, fallbackPackageId, authors, manualVersion);
+			}
+
+			return null;
+		}
+
+		private static async Task<FeedVersion> GetVersionForFallbackPackage(
+			UpdaterParameters parameters,
+			CancellationToken ct,
+			PackageReference reference,
+			string fallbackPackageId,
+			string[] authors,
+			(bool forceVersion, UpgradePolicy upgradePolicy, VersionRange range) manualVersion)
+		{
+			// Create a new reference with the fallback package ID
+			var fallbackReference = new PackageReference(
+				new PackageIdentity(fallbackPackageId, reference.Identity.Version),
+				reference.Files
+			);
+
+			var fallbackVersions = await Task.WhenAll(parameters
+				.Feeds
+				.SelectMany(f => authors.Select(author => f.GetPackageVersions(ct, fallbackReference, author)))
+			);
+
+			var fallbackVersionsPerTarget = fallbackVersions
+				.SelectMany(x => x)
+				.Where(v => manualVersion.range?.Satisfies(v.Version) ?? true)
+				.Where(v => IsUpgradable(manualVersion.upgradePolicy, fallbackReference, v.Version))
+				.OrderByDescending(v => v)
+				.GroupBy(version => parameters
+					.TargetVersions
+					.FirstOrDefault(t => version.IsMatchingVersion(t, parameters.Strict)))
+				.Where(g => g.Key.HasValue());
+
+			return fallbackVersionsPerTarget
+				.Select(g => g.FirstOrDefault())
+				.OrderByDescending(v => v.Version)
+				.FirstOrDefault();
+		}
+
+		private static string ConvertPackageIdToPropertyName(string packageId)
+		{
+			// Convert "uno.extensions" -> "UnoExtensions"
+			// Split by dots and capitalize each part
+			var parts = packageId.Split('.');
+			var propertyName = string.Join("", parts.Select(p => 
+				char.ToUpperInvariant(p[0]) + (p.Length > 1 ? p.Substring(1) : "")));
+			return propertyName;
 		}
 
 		private static bool IsUpgradable(

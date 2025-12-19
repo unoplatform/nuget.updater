@@ -116,6 +116,10 @@ namespace NvGet.Extensions
 					if(NuGetVersion.TryParse(versionProperty.InnerText, out var nugetVersion))
 					{
 						references.Add(CreatePackageIdentity(packageName, versionProperty.InnerText));
+						
+						// Store property name for potential fallback mapping lookup
+						// Fallback mappings are always checked and used if they provide a newer version
+						// Example: UnoExtensionsVersion -> uno.extensions (outdated 3.0.0-dev.1957) -> fallback to Uno.Extensions.Core (7.1.0-dev.62)
 					}
 				}
 			}
