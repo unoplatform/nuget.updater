@@ -153,7 +153,7 @@ jobs:
       - name: NuGet Push
         shell: pwsh
         run: |
-          dotnet nuget push artifacts\*.nupkg -s https://api.nuget.org/v3/index.json -k "${{ secrets.NUGET_ORG_API_KEY }}"
+          dotnet nuget push artifacts\*.nupkg -s https://api.nuget.org/v3/index.json -k "${{ secrets.NUGET_ORG_API_KEY }}" --skip-duplicate
 
   publish_nuget_prod:
     name: Publish NuGet Production
@@ -174,7 +174,7 @@ jobs:
       - name: NuGet Push
         shell: pwsh
         run: |
-          dotnet nuget push artifacts\*.nupkg -s https://api.nuget.org/v3/index.json -k "${{ secrets.NUGET_ORG_API_KEY }}"
+          dotnet nuget push artifacts\*.nupkg -s https://api.nuget.org/v3/index.json -k "${{ secrets.NUGET_ORG_API_KEY }}" --skip-duplicate
 
   publish_extensions_prod:
     name: Publish Extensions Production
