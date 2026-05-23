@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 - Added tool allowing to display package dependencies
+- Built-in property-to-package fallback mappings for Uno legacy base packages (`UnoMaterial` → `Uno.Material.WinUI`, `UnoThemes` → `Uno.Themes.WinUI`, `UnoExtensions` → `Uno.Extensions.Core`). The fallback is gated by a suspicion check (only fires when the standard lookup returns nothing or a version older than the local reference), keeping behavior safe for direct references to legacy IDs. See `specs/property-package-fallback-mappings/spec.md`.
 ### Changed
 - Changed code structure to be able to share code between tools
 ### Fixed
