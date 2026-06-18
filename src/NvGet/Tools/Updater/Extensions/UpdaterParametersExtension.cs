@@ -192,10 +192,8 @@ namespace NvGet.Tools.Updater.Extensions
 				return packageId;
 			}
 
-			var parts = packageId.Split('.');
-			return string.Concat(parts.Select(p => p.Length == 0
-				? string.Empty
-				: char.ToUpperInvariant(p[0]) + (p.Length > 1 ? p.Substring(1) : string.Empty)));
+			var parts = packageId.Split('.', StringSplitOptions.RemoveEmptyEntries);
+			return string.Concat(parts.Select(p => char.ToUpperInvariant(p[0]) + p[1..]));
 		}
 
 		private static bool IsUpgradable(

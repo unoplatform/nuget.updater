@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace NvGet.Tools.Updater.Entities
@@ -31,7 +32,7 @@ namespace NvGet.Tools.Updater.Entities
 		/// mismatch is observed in production canary build logs.
 		/// </remarks>
 		private static readonly IReadOnlyDictionary<string, (string FallbackPackageId, string Reason)> WellKnownMappings =
-			new Dictionary<string, (string, string)>
+			new Dictionary<string, (string, string)>(StringComparer.InvariantCultureIgnoreCase)
 			{
 				// Legacy `uno.material` (UWP-era) is at v5.x and stale.
 				// Modern consumers reference `Uno.Material.WinUI` (currently 7.x).

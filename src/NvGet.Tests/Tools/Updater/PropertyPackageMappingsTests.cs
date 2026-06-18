@@ -6,62 +6,31 @@ namespace NvGet.Tests.Tools.Updater
 	[TestClass]
 	public class PropertyPackageMappingsTests
 	{
-		[TestMethod]
-		public void GivenUnoExtensions_WhenTryGetFallbackMapping_ReturnsUnoExtensionsCore()
+		[DataTestMethod]
+		[DataRow("UnoExtensions", "Uno.Extensions.Core")]
+		[DataRow("UnoMaterial", "Uno.Material.WinUI")]
+		[DataRow("UnoThemes", "Uno.Themes.WinUI")]
+		public void GivenMappedProperty_WhenTryGetFallbackMapping_ReturnsFallback(string property, string expectedFallbackPackageId)
 		{
-			var result = PropertyPackageMappings.TryGetFallbackMapping("UnoExtensions", out var fallbackPackageId, out var reason);
+			var result = PropertyPackageMappings.TryGetFallbackMapping(property, out var fallbackPackageId, out var reason);
 
 			Assert.IsTrue(result);
-			Assert.AreEqual("Uno.Extensions.Core", fallbackPackageId);
+			Assert.AreEqual(expectedFallbackPackageId, fallbackPackageId);
 			Assert.IsTrue(reason.Contains("outdated"));
 		}
 
-		[TestMethod]
-		public void GivenUnoMaterial_WhenTryGetFallbackMapping_ReturnsUnoMaterialWinUI()
+		// UnoToolkit / UnoWinui / UnoResizetizer / UnoTemplates intentionally not mapped:
+		// their derived lowercase IDs match real, current packages on NuGet.org.
+		[DataTestMethod]
+		[DataRow("UnknownProperty")]
+		[DataRow("UnoToolkit")]
+		[DataRow("UnoWinui")]
+		[DataRow("UnoResizetizer")]
+		[DataRow("UnoTemplates")]
+		[DataRow(null)]
+		public void GivenUnmappedProperty_WhenTryGetFallbackMapping_ReturnsFalse(string property)
 		{
-			var result = PropertyPackageMappings.TryGetFallbackMapping("UnoMaterial", out var fallbackPackageId, out var reason);
-
-			Assert.IsTrue(result);
-			Assert.AreEqual("Uno.Material.WinUI", fallbackPackageId);
-			Assert.IsTrue(reason.Contains("outdated"));
-		}
-
-		[TestMethod]
-		public void GivenUnoThemes_WhenTryGetFallbackMapping_ReturnsUnoThemesWinUI()
-		{
-			var result = PropertyPackageMappings.TryGetFallbackMapping("UnoThemes", out var fallbackPackageId, out var reason);
-
-			Assert.IsTrue(result);
-			Assert.AreEqual("Uno.Themes.WinUI", fallbackPackageId);
-			Assert.IsTrue(reason.Contains("outdated"));
-		}
-
-		[TestMethod]
-		public void GivenUnknownProperty_WhenTryGetFallbackMapping_ReturnsFalse()
-		{
-			var result = PropertyPackageMappings.TryGetFallbackMapping("UnknownProperty", out var fallbackPackageId, out var reason);
-
-			Assert.IsFalse(result);
-			Assert.IsNull(fallbackPackageId);
-			Assert.IsNull(reason);
-		}
-
-		[TestMethod]
-		public void GivenUnoToolkit_WhenTryGetFallbackMapping_ReturnsFalse()
-		{
-			// UnoToolkit / UnoWinui / UnoResizetizer / UnoTemplates intentionally not mapped:
-			// their derived lowercase IDs match real, current packages on NuGet.org.
-			var result = PropertyPackageMappings.TryGetFallbackMapping("UnoToolkit", out var fallbackPackageId, out var reason);
-
-			Assert.IsFalse(result);
-			Assert.IsNull(fallbackPackageId);
-			Assert.IsNull(reason);
-		}
-
-		[TestMethod]
-		public void GivenNull_WhenTryGetFallbackMapping_ReturnsFalse()
-		{
-			var result = PropertyPackageMappings.TryGetFallbackMapping(null, out var fallbackPackageId, out var reason);
+			var result = PropertyPackageMappings.TryGetFallbackMapping(property, out var fallbackPackageId, out var reason);
 
 			Assert.IsFalse(result);
 			Assert.IsNull(fallbackPackageId);
