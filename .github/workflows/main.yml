@@ -37,6 +37,17 @@ jobs:
         $adjustedPackageVersion="${{ steps.nbgv.outputs.SemVer2 }}".ToLower();
         dotnet build src/NvGet.sln /p:PackageVersion=$adjustedPackageVersion /p:Version=${{ steps.nbgv.outputs.AssemblyVersion }} "/p:PackageOutputPath=$env:GITHUB_WORKSPACE\artifacts" /p:GeneratePackageOnBuild=true
 
+    - name: Add NuGet Summary
+      shell: pwsh
+      run: |
+        echo "### NuGet Package Summary" >> $env:GITHUB_STEP_SUMMARY
+        echo "Package version: ${{ steps.nbgv.outputs.SemVer2 }}" >> $env:GITHUB_STEP_SUMMARY
+        echo "<details><summary>Produced packages</summary><p>" >> $env:GITHUB_STEP_SUMMARY
+        echo "" >> $env:GITHUB_STEP_SUMMARY
+        Get-ChildItem "$env:GITHUB_WORKSPACE\artifacts\*.nupkg" | Sort-Object Name | ForEach-Object { echo "- $($_.Name)" >> $env:GITHUB_STEP_SUMMARY }
+        echo "" >> $env:GITHUB_STEP_SUMMARY
+        echo "</p></details>" >> $env:GITHUB_STEP_SUMMARY
+
     - name: Run Unit Tests
       run: |
         cd src
