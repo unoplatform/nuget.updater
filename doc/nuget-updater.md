@@ -163,6 +163,22 @@ When a version is tracked via an MSBuild property (e.g. `<UnoMaterialVersion>7.0
    | `UnoMaterial` | `Uno.Material.WinUI` | Legacy `uno.material` (UWP era) is at v5.x; modern consumers reference the WinUI 3 variant. |
    | `UnoThemes` | `Uno.Themes.WinUI` | Legacy `uno.themes` (UWP era) is at v5.x; modern consumers reference the WinUI 3 variant (and `Uno.Simple.WinUI` ships in lockstep). |
    | `UnoExtensions` | `Uno.Extensions.Core` | Legacy umbrella `uno.extensions` is at v2.x; modern consumers reference the `Uno.Extensions.*` family (in lockstep, so `.Core` is a canonical lookup). |
+   | `UnoCsharpMarkup` | `Uno.WinUI.Markup` | `UnoCSharpMarkupVersion` derives to `uno.csharp.markup`, which isn't a package. |
+   | `UnoCoreLoggingSingleton` | `Uno.Core.Extensions.Logging.Singleton` | `UnoCoreLoggingSingletonVersion` derives to `uno.core.logging.singleton`. |
+   | `UnoFonts` | `Uno.Fonts.OpenSans` | `UnoFontsVersion` derives to `uno.fonts`; the `Uno.Fonts.*` packages ship together. |
+   | `UnoHotDesign` | `Uno.UI.HotDesign` | `UnoHotDesignVersion` derives to `uno.hot.design`. |
+   | `UnoLogging` | `Uno.Extensions.Logging.OSLog` | `UnoLoggingVersion` derives to `uno.logging`. |
+   | `UnoMaui` | `Uno.Maui.Embedding` | `UnoMauiVersion` derives to `uno.maui`. |
+   | `UnoReactor` | `Uno.Microsoft.UI.Reactor` | `UnoReactorVersion` derives to `uno.reactor`. |
+   | `UnoRetarget` | `Uno.WinUI.Retarget` | `UnoRetargetVersion` derives to `uno.retarget`. |
+   | `UnoSettings` | `Uno.Settings.DevServer` | `UnoSettingsVersion` derives to `uno.settings`. |
+   | `UnoAppMcp` | `Uno.UI.App.Mcp` | `UnoAppMcpVersion` derives to `uno.app.mcp`. |
+
+   A version override on the package in the second column (`--versionOverrides`) also applies to the property, unless the property's own derived ID has one.
+
+   This table is frozen: it only serves Uno.Sdk versions that don't publish the `versionProperty` field (6.x and 7.0). A property added to the Uno.Sdk later needs no row here; it is resolved by step 4.
+
+4. **Uno.Sdk property mappings.** When the built-in table has no entry, the updater reads the `versionProperty` field of each group in the `packages.json` of the latest `Uno.Sdk.Private` on the configured feeds (once per run, only when needed) and looks up the group's first package. New Uno.Sdk properties are therefore handled without an updater change. Only groups of `Uno.*` packages are used; failures to read the Uno.Sdk are logged and never fail the run. See [`specs/uno-sdk-property-mappings/spec.md`](https://github.com/unoplatform/nuget.updater/blob/main/specs/uno-sdk-property-mappings/spec.md).
 
    No flag is required to enable the fallback table. If you need behavior that differs from these defaults for a specific repository, use `--updateProperties=` to declare the explicit `(PropertyName, PackageId)` you want.
 

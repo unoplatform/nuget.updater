@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using NvGet.Entities;
+using NvGet.Helpers;
 using NuGet.Packaging.Core;
 using NuGet.Versioning;
 using Uno.Extensions;
@@ -96,20 +97,7 @@ namespace NvGet.Extensions
 
 			foreach(var versionProperty in propertyGroupVersionReferences)
 			{
-				var originalTrimmedName = versionProperty
-					.LocalName
-					.TrimEnd("Version");
-
-				var nameParts =
-					originalTrimmedName
-					.Select((c, i) =>
-						i > 0
-						&& char.IsUpper(c)
-						&& !char.IsUpper(originalTrimmedName[i - 1])
-						? "." + c
-						: c.ToString());
-
-				var packageName = string.Concat(nameParts).ToLowerInvariant();
+				var packageName = VersionPropertyNames.ToPackageId(versionProperty.LocalName);
 
 				if(!string.IsNullOrWhiteSpace(packageName))
 				{

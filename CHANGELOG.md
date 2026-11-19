@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 - Added tool allowing to display package dependencies
 - Built-in property-to-package fallback mappings for Uno legacy base packages (`UnoMaterial` → `Uno.Material.WinUI`, `UnoThemes` → `Uno.Themes.WinUI`, `UnoExtensions` → `Uno.Extensions.Core`). The fallback is gated by a suspicion check (only fires when the standard lookup returns nothing or a version older than the local reference), keeping behavior safe for direct references to legacy IDs. See `specs/property-package-fallback-mappings/spec.md`.
+- Uno.Sdk property mappings: version properties the name lookup can't resolve are mapped through the `versionProperty` field the Uno.Sdk publishes in its `packages.json`, so new Uno.Sdk properties are updated without an updater change. The built-in list also covers the current Uno.Sdk properties (`UnoCSharpMarkupVersion`, `UnoCoreLoggingSingletonVersion`, `UnoFontsVersion`, `UnoHotDesignVersion`, `UnoLoggingVersion`, `UnoMauiVersion`, `UnoReactorVersion`, `UnoRetargetVersion`, `UnoSettingsVersion`, `UnoAppMcpVersion`) for Uno.Sdk versions without the field. A version override on the mapped package applies to the property. See `specs/uno-sdk-property-mappings/spec.md`.
 ### Changed
 - Changed code structure to be able to share code between tools
 ### Fixed
