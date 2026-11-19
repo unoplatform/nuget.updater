@@ -47,6 +47,22 @@ namespace NvGet.Tools.Updater.Entities
 				// Modern consumers reference Uno.Extensions.* family packages (currently 7.x);
 				// the family ships in lockstep so Uno.Extensions.Core is a safe canonical lookup.
 				["UnoExtensions"] = ("Uno.Extensions.Core", "Base package Uno.Extensions is outdated; resolving against Uno.Extensions.Core."),
+
+				// Uno.Sdk version properties whose name-derived ID matches no package at all. Newer Uno.Sdk
+				// versions publish these pairs in packages.json ("versionProperty", read by
+				// UnoSdkPropertyMappings); this list covers the Uno.Sdk versions that predate it.
+				// Keys are what ConvertPackageIdToPropertyFragment produces from the derived ID
+				// (UnoCSharpMarkupVersion → uno.csharp.markup → UnoCsharpMarkup).
+				["UnoCsharpMarkup"] = ("Uno.WinUI.Markup", "UnoCSharpMarkupVersion controls the C# Markup packages; resolving against Uno.WinUI.Markup."),
+				["UnoCoreLoggingSingleton"] = ("Uno.Core.Extensions.Logging.Singleton", "UnoCoreLoggingSingletonVersion controls Uno.Core.Extensions.Logging.Singleton."),
+				["UnoFonts"] = ("Uno.Fonts.OpenSans", "UnoFontsVersion controls the Uno.Fonts packages; resolving against Uno.Fonts.OpenSans."),
+				["UnoHotDesign"] = ("Uno.UI.HotDesign", "UnoHotDesignVersion controls Uno.UI.HotDesign."),
+				["UnoLogging"] = ("Uno.Extensions.Logging.OSLog", "UnoLoggingVersion controls the Uno.Extensions.Logging packages; resolving against Uno.Extensions.Logging.OSLog."),
+				["UnoMaui"] = ("Uno.Maui.Embedding", "UnoMauiVersion controls the Uno.Maui packages; resolving against Uno.Maui.Embedding."),
+				["UnoReactor"] = ("Uno.Microsoft.UI.Reactor", "UnoReactorVersion controls Uno.Microsoft.UI.Reactor."),
+				["UnoRetarget"] = ("Uno.WinUI.Retarget", "UnoRetargetVersion controls Uno.WinUI.Retarget."),
+				["UnoSettings"] = ("Uno.Settings.DevServer", "UnoSettingsVersion controls Uno.Settings.DevServer."),
+				["UnoAppMcp"] = ("Uno.UI.App.Mcp", "UnoAppMcpVersion controls Uno.UI.App.Mcp."),
 			};
 
 		/// <summary>

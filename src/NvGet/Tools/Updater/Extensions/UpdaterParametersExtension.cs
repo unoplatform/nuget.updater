@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -117,19 +118,36 @@ namespace NvGet.Tools.Updater.Extensions
 			// that doesn't exist for the original package ID and break the restore.
 			//
 			// Users who need explicit, non-fallback property→package mappings should use --updateProperties=.
+			//
+			// Two sources, in this order:
+			//  1. PropertyPackageMappings: the built-in list (also covers Uno.Sdk versions that predate 2).
+			//  2. UnoSdkPropertyMappings: the property names the Uno.Sdk publishes in its packages.json, so
+			//     properties added to the Uno.Sdk later are resolved without an updater change.
 			var standardIsSuspicious = result == null || reference.Identity.Version > result.Version;
 			if(standardIsSuspicious)
 			{
-				var propertyFragment = ConvertPackageIdToPropertyFragment(reference.Identity.Id);
-				if(PropertyPackageMappings.TryGetFallbackMapping(propertyFragment, out var fallbackPackageId, out var reason))
-				{
-					var fallbackReference = new PackageReference(
-						new PackageIdentity(fallbackPackageId, reference.Identity.Version),
-						reference.Files
-					);
-					var fallbackResult = await ResolveLatestVersion(parameters, ct, fallbackReference, authors, manualVersion);
+				string fallbackPackageId = null;
+				string reason = null;
 
-					if(fallbackResult != null && (result == null || fallbackResult.Version > result.Version))
+				var propertyFragment = ConvertPackageIdToPropertyFragment(reference.Identity.Id);
+				if(PropertyPackageMappings.TryGetFallbackMapping(propertyFragment, out var builtInPackageId, out var builtInReason))
+				{
+					(fallbackPackageId, reason) = (builtInPackageId, builtInReason);
+				}
+				else
+				{
+					var sdkMappings = await parameters.GetUnoSdkMappings(() => LoadUnoSdkMappings(parameters, ct));
+					if(sdkMappings.TryGetPackageId(reference.Identity.Id, out var sdkPackageId, out var propertyName))
+					{
+						(fallbackPackageId, reason) = (sdkPackageId, $"{propertyName} controls {sdkPackageId} in {sdkMappings.Source}");
+					}
+				}
+
+				if(fallbackPackageId != null)
+				{
+					var fallbackResult = await ResolveFallbackVersion(parameters, ct, reference, fallbackPackageId, authors, manualVersion);
+
+					if(fallbackResult != null && (result == null || fallbackResult.Version > result.Version || fallbackResult.IsOverride))
 					{
 						PackageFeed.Logger.LogInformation($"Applied property fallback mapping: {reference.Identity.Id} -> {fallbackPackageId} ({reason})");
 						result = fallbackResult;
@@ -138,6 +156,114 @@ namespace NvGet.Tools.Updater.Extensions
 			}
 
 			return result;
+		}
+
+		/// <summary>
+		/// Resolves the version of the package a property was mapped to. A version override set on that
+		/// package ID (for example a cap on Uno.Extensions.Logging.OSLog) applies to the property too,
+		/// unless the property's own derived ID already has one.
+		/// </summary>
+		private static async Task<FeedVersion> ResolveFallbackVersion(
+			UpdaterParameters parameters,
+			CancellationToken ct,
+			PackageReference reference,
+			string fallbackPackageId,
+			string[] authors,
+			(bool forceVersion, UpgradePolicy upgradePolicy, VersionRange range) manualVersion)
+		{
+			var hasOwnOverride = parameters.VersionOverrides.ContainsKey(reference.Identity.Id);
+			if(!hasOwnOverride && parameters.VersionOverrides.TryGetValue(fallbackPackageId, out var fallbackOverride))
+			{
+				if(fallbackOverride.forceVersion)
+				{
+					PackageFeed.Logger.LogInformation($"Overriding version for {reference.Identity.Id} with the override of {fallbackPackageId}");
+					return new FeedVersion(fallbackOverride.range.MinVersion);
+				}
+
+				manualVersion = fallbackOverride;
+			}
+
+			var fallbackReference = new PackageReference(
+				new PackageIdentity(fallbackPackageId, reference.Identity.Version),
+				reference.Files
+			);
+
+			return await ResolveLatestVersion(parameters, ct, fallbackReference, authors, manualVersion);
+		}
+
+		/// <summary>
+		/// Reads the version property names published in the latest Uno.Sdk.Private on the configured feeds
+		/// (honoring a version override on Uno.Sdk.Private). Never throws: any failure is logged and gives
+		/// an empty table, so the run goes on with the built-in mappings only.
+		/// </summary>
+		public static async Task<UnoSdkPropertyMappings> LoadUnoSdkMappings(UpdaterParameters parameters, CancellationToken ct)
+		{
+			var downloadFolder = Path.Join(Path.GetTempPath(), "nvget-uno-sdk", Guid.NewGuid().ToString("N"));
+
+			try
+			{
+				var sdkReference = new PackageReference(UnoSdkPropertyMappings.SdkPackageId, "0.0.0");
+
+				FeedVersion sdkVersion;
+				if(parameters.VersionOverrides.TryGetValue(UnoSdkPropertyMappings.SdkPackageId, out var sdkOverride) && sdkOverride.forceVersion)
+				{
+					sdkVersion = new FeedVersion(sdkOverride.range.MinVersion);
+				}
+				else
+				{
+					var authors = parameters.PackageAuthors?.Split(',') is { Length: > 0 } value
+						? value
+						: new string[] { null };
+
+					sdkVersion = await ResolveLatestVersion(parameters, ct, sdkReference, authors, sdkOverride);
+				}
+
+				if(sdkVersion == null)
+				{
+					PackageFeed.Logger.LogInformation($"Uno.Sdk property mappings: no {UnoSdkPropertyMappings.SdkPackageId} found, using the built-in mappings only.");
+					return UnoSdkPropertyMappings.Empty;
+				}
+
+				var identity = new PackageIdentity(UnoSdkPropertyMappings.SdkPackageId, sdkVersion.Version);
+				var feeds = parameters.Feeds
+					.OrderByDescending(f => sdkVersion.FeedUri != null && f.Url == sdkVersion.FeedUri)
+					.ToArray();
+
+				Directory.CreateDirectory(downloadFolder);
+
+				foreach(var feed in feeds)
+				{
+					var package = await feed.DownloadPackage(ct, identity, downloadFolder);
+					if(package?.Path != null && File.Exists(package.Path))
+					{
+						var mappings = UnoSdkPropertyMappings.FromPackage(package.Path, $"{identity.Id} {identity.Version.ToNormalizedString()}");
+						PackageFeed.Logger.LogInformation($"Uno.Sdk property mappings: {mappings.Count} read from {mappings.Source ?? identity.ToString()}.");
+						return mappings;
+					}
+				}
+
+				PackageFeed.Logger.LogInformation($"Uno.Sdk property mappings: could not download {identity}, using the built-in mappings only.");
+				return UnoSdkPropertyMappings.Empty;
+			}
+			catch(Exception ex) when(!ct.IsCancellationRequested)
+			{
+				PackageFeed.Logger.LogInformation($"Uno.Sdk property mappings: failed to read them ({ex.GetType().Name}: {ex.Message}), using the built-in mappings only.");
+				return UnoSdkPropertyMappings.Empty;
+			}
+			finally
+			{
+				try
+				{
+					if(Directory.Exists(downloadFolder))
+					{
+						Directory.Delete(downloadFolder, recursive: true);
+					}
+				}
+				catch(Exception ex) when(ex is IOException or UnauthorizedAccessException)
+				{
+					// Temporary folder; leaving it behind is harmless.
+				}
+			}
 		}
 
 		private static async Task<FeedVersion> ResolveLatestVersion(

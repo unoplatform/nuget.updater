@@ -74,5 +74,23 @@ namespace NvGet.Tools.Updater.Entities
 		/// Gets or sets a value indicating whether to actually write the updates to the files.
 		/// </summary>
 		public bool IsDryRun { get; set; }
+
+		/// <summary>
+		/// Version property → package mappings published by the Uno.Sdk (see <see cref="UnoSdkPropertyMappings"/>).
+		/// Leave unset to read them from the latest Uno.Sdk.Private on <see cref="Feeds"/> the first time a
+		/// property can't be resolved by name; set it to use a fixed table (tests, offline runs).
+		/// </summary>
+		public UnoSdkPropertyMappings UnoSdkMappings
+		{
+			set => _unoSdkMappings = new Lazy<Task<UnoSdkPropertyMappings>>(Task.FromResult(value ?? UnoSdkPropertyMappings.Empty));
+		}
+
+		private Lazy<Task<UnoSdkPropertyMappings>> _unoSdkMappings;
+
+		/// <summary>
+		/// Gets the Uno.Sdk mappings, loading them once per run with <paramref name="loader"/>.
+		/// </summary>
+		internal Task<UnoSdkPropertyMappings> GetUnoSdkMappings(Func<Task<UnoSdkPropertyMappings>> loader)
+			=> LazyInitializer.EnsureInitialized(ref _unoSdkMappings, () => new Lazy<Task<UnoSdkPropertyMappings>>(loader)).Value;
 	}
 }
